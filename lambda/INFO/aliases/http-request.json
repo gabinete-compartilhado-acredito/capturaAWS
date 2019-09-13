@@ -1,0 +1,32 @@
+{
+    "Aliases": [
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:http-request:DEV",
+            "Name": "DEV",
+            "FunctionVersion": "$LATEST",
+            "Description": "",
+            "RevisionId": "4f4b91bd-8320-4bcb-8621-5e155c7d42b2"
+        },
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:http-request:JustLambda",
+            "Name": "JustLambda",
+            "FunctionVersion": "29",
+            "Description": "step function independent",
+            "RevisionId": "45c1a7ab-a730-4be6-9611-2574f0d2babe"
+        },
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:http-request:PROD",
+            "Name": "PROD",
+            "FunctionVersion": "10",
+            "Description": "",
+            "RevisionId": "e000561a-3cac-4b3a-afe2-4ab74be7a33a"
+        },
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:http-request:template",
+            "Name": "template",
+            "FunctionVersion": "1",
+            "Description": "",
+            "RevisionId": "88abf780-795d-4a41-b9b3-84827837c866"
+        }
+    ]
+}

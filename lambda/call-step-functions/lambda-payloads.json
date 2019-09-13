@@ -1,0 +1,8 @@
+{
+    "call-step-functions": {
+        "lambda": {
+            "capture_type": "live",
+            "begins_with": "camara"
+        }
+    }
+}

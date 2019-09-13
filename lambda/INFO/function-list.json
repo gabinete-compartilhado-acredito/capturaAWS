@@ -1,0 +1,554 @@
+{
+    "Functions": [
+        {
+            "FunctionName": "dynamodb-backup-tables",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:dynamodb-backup-tables",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 894,
+            "Description": "",
+            "Timeout": 63,
+            "MemorySize": 128,
+            "LastModified": "2019-04-01T21:55:20.665+0000",
+            "CodeSha256": "tXmso7WEmG3mNaxOpR8oZCL6yLx8tE7ls0PlZLUZfe8=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "3951a778-0a48-4913-8955-a6144d6a3501"
+        },
+        {
+            "FunctionName": "run-glue",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:run-glue",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 375,
+            "Description": "",
+            "Timeout": 123,
+            "MemorySize": 128,
+            "LastModified": "2019-03-07T15:27:00.700+0000",
+            "CodeSha256": "P093ZwmmHt2Lc2c+OtNRGyK4M7Moyi002s8hAQE35Q4=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "b224f5cc-abfb-40b0-82e8-4b3fc780bcef"
+        },
+        {
+            "FunctionName": "clean_dynamo_tables",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:clean_dynamo_tables",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 331,
+            "Description": "",
+            "Timeout": 183,
+            "MemorySize": 128,
+            "LastModified": "2019-04-02T12:00:34.870+0000",
+            "CodeSha256": "yxLfL8EPUeeKqR8XPdi7BYzQ369ZVfiGjnlUJQw2hfc=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "2b498fee-7a45-4c4e-a704-f41e9789dbec"
+        },
+        {
+            "FunctionName": "add-to-bigquery",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:add-to-bigquery",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 886,
+            "Description": "",
+            "Timeout": 900,
+            "MemorySize": 128,
+            "LastModified": "2019-04-29T20:06:50.122+0000",
+            "CodeSha256": "Z1M1kSjOle51xcCK8WQCyWd7aLMxRBuGZeUlUkT96Sk=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "Environment": {
+                "Variables": {
+                    "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/key.json"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "5409e4e1-3bbb-474a-a890-11b3efae173a",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:google-cloud-storage:1",
+                    "CodeSize": 5400457
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:google-cloud-bigquery:1",
+                    "CodeSize": 5595732
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:bigquery-schema-generator:1",
+                    "CodeSize": 33365
+                }
+            ]
+        },
+        {
+            "FunctionName": "capture-live-camara",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:capture-live-camara",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 375,
+            "Description": "",
+            "Timeout": 123,
+            "MemorySize": 128,
+            "LastModified": "2019-04-25T22:06:56.142+0000",
+            "CodeSha256": "zZ9rQ8Nqj0zwug0Yse/cKFWhSCFk7VXSsjYZc/SMeZg=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "254382c7-41fe-479a-b8da-decd54e02de7"
+        },
+        {
+            "FunctionName": "capture-historical-camara",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:capture-historical-camara",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 360,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2019-02-26T18:14:51.117+0000",
+            "CodeSha256": "G5KJXIEckIEGUQ1uTXXgDXhOrV1Vj/iaxUfJsoGPOlU=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "f215e775-7f99-4eac-b79c-039f2ce8355e"
+        },
+        {
+            "FunctionName": "testing",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:testing",
+            "Runtime": "python3.6",
+            "Role": "arn:aws:iam::085250262607:role/service-role/InvokeLambda",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 568,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2019-05-29T23:04:00.544+0000",
+            "CodeSha256": "EUVoXPHvZY7sk0b1ZCbQIUE0+4UMw8RPahJ2w1VtmR8=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "6fc09e10-aed9-46e5-b458-499ea0823e0c"
+        },
+        {
+            "FunctionName": "write-to-storage-gcp",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:write-to-storage-gcp",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 523,
+            "Description": "",
+            "Timeout": 843,
+            "MemorySize": 256,
+            "LastModified": "2019-08-06T23:10:38.923+0000",
+            "CodeSha256": "bHkU+xmroLcV0kEOE9nhLkbOjWjwPDRo8XQKZMc+mQ8=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "Environment": {
+                "Variables": {
+                    "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/key.json"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "b2bfdcdc-d0d5-4d08-80b4-4798331e8a66",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:google-cloud-storage:1",
+                    "CodeSize": 5400457
+                }
+            ]
+        },
+        {
+            "FunctionName": "parametrize-API-requests",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:parametrize-API-requests",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 5054,
+            "Description": "",
+            "Timeout": 900,
+            "MemorySize": 128,
+            "LastModified": "2019-08-16T18:17:45.139+0000",
+            "CodeSha256": "/Nin2WXue+jfauCVtBCgAPzTytIqUKNDDymK47y1oY4=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "84bd03ad-9acf-4bfb-87e8-2fbe42d88696",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
+                    "CodeSize": 8301044
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:pyathena:1",
+                    "CodeSize": 9428148
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:xmltodict:1",
+                    "CodeSize": 16999
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:requests:1",
+                    "CodeSize": 904176
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:lxml:1",
+                    "CodeSize": 5787930
+                }
+            ]
+        },
+        {
+            "FunctionName": "step-function-loop",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:step-function-loop",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/service-role/step-function-loop-role-ufewqisl",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 247,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2019-03-22T14:40:33.172+0000",
+            "CodeSha256": "uw3cSy3LT/QSG4ta2wgxI2ZsTW62aRui9SAa5W/l00o=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "1d107891-aefe-4e7d-814a-25ba461d3154"
+        },
+        {
+            "FunctionName": "capture_dou",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:capture_dou",
+            "Runtime": "python3.6",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 20291,
+            "Description": "",
+            "Timeout": 900,
+            "MemorySize": 192,
+            "LastModified": "2019-08-27T23:00:04.491+0000",
+            "CodeSha256": "LWbaU+U2kkwcMFcEgu9bJHqKUnLKodDoWf3Nq43tBCQ=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "Environment": {
+                "Variables": {
+                    "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/key.json"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "7d6e0211-e22f-4112-8c12-11d1464eda5d",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:requests:1",
+                    "CodeSize": 904176
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:lxml_v2:1",
+                    "CodeSize": 5808263
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
+                    "CodeSize": 8301044
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:slackclient:1",
+                    "CodeSize": 1221808
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:google-cloud-bigquery:1",
+                    "CodeSize": 5595732
+                }
+            ]
+        },
+        {
+            "FunctionName": "post-to-slack",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:post-to-slack",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 1482,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2019-05-29T19:49:36.116+0000",
+            "CodeSha256": "A0eqeKtuMluUEAKo+TSrRmGqmuzEeSdiP8pOEVMzc4Y=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "fa488dad-2c88-4209-a7c0-995ef88d5ef7",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:slackclient:1",
+                    "CodeSize": 1221808
+                }
+            ]
+        },
+        {
+            "FunctionName": "call-step-functions",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:call-step-functions",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 2158,
+            "Description": "",
+            "Timeout": 900,
+            "MemorySize": 128,
+            "LastModified": "2019-07-04T13:30:45.329+0000",
+            "CodeSha256": "ed7wvbXq7M/jpnG2KXRVJSPD6ClM6WbD2CDp0hA/OlM=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "087938e1-7d0c-4cff-9fe2-0515d9acb1c5"
+        },
+        {
+            "FunctionName": "dynamodb-delete-table",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:dynamodb-delete-table",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 269,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2019-04-17T19:19:44.117+0000",
+            "CodeSha256": "ayOqwb3Eskr2oKwMVFcmSAZ/kCn3gMXxz7N0ykVOry4=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "08f29084-1eb0-4063-9dcf-7d4f63325858"
+        },
+        {
+            "FunctionName": "SNSwarning",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:SNSwarning",
+            "Runtime": "python3.6",
+            "Role": "arn:aws:iam::085250262607:role/service-role/PublishSNS",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 832,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2019-05-29T22:57:38.244+0000",
+            "CodeSha256": "xfWr7K661Y2ydEm3TEI7C1+Ru8OSyILil+HzFPOcWUA=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "03961fd7-3493-4d40-aded-dd0c7eb61c74"
+        },
+        {
+            "FunctionName": "add-to-bigquery-slave",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:add-to-bigquery-slave",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 1610,
+            "Description": "",
+            "Timeout": 900,
+            "MemorySize": 1088,
+            "LastModified": "2019-07-17T21:56:14.292+0000",
+            "CodeSha256": "5i2OOJvLRx/NGBKyNa/0lizdQ9kvmA9nZQMW4CELUQ4=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "Environment": {
+                "Variables": {
+                    "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/key.json"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "8bc5e840-93a3-4f47-9b60-ee7675100a8b",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:bigquery-schema-generator:1",
+                    "CodeSize": 33365
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:google-cloud-bigquery:1",
+                    "CodeSize": 5595732
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:google-cloud-storage:1",
+                    "CodeSize": 5400457
+                }
+            ]
+        },
+        {
+            "FunctionName": "bigquery-to-sns",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:bigquery-to-sns",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 4110,
+            "Description": "",
+            "Timeout": 900,
+            "MemorySize": 128,
+            "LastModified": "2019-07-04T19:01:54.611+0000",
+            "CodeSha256": "pUc2qio9iBgwaT4sHhh2mCOyDXWPELq5M/H/kl3beO8=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "Environment": {
+                "Variables": {
+                    "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/key.json"
+                }
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "234d0edb-2065-4773-81c3-b6632244e231",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:google-cloud-bigquery:1",
+                    "CodeSize": 5595732
+                }
+            ]
+        },
+        {
+            "FunctionName": "http-request",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:http-request",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 6248,
+            "Description": "",
+            "Timeout": 900,
+            "MemorySize": 448,
+            "LastModified": "2019-08-06T22:53:19.632+0000",
+            "CodeSha256": "0emY3FippRYA0VGQKz7zgtQoGRHcsZO3yQd0WkP3O7w=",
+            "Version": "$LATEST",
+            "VpcConfig": {
+                "SubnetIds": [],
+                "SecurityGroupIds": [],
+                "VpcId": ""
+            },
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "1cdbb9c4-62f1-4f1a-84f0-720303c62799",
+            "Layers": [
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:xmltodict:1",
+                    "CodeSize": 16999
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
+                    "CodeSize": 8301044
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:lxml:1",
+                    "CodeSize": 5787930
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:requests:1",
+                    "CodeSize": 904176
+                }
+            ]
+        },
+        {
+            "FunctionName": "capture-daily-camara",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:capture-daily-camara",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 451,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2019-07-03T20:33:33.278+0000",
+            "CodeSha256": "LLcPdxi12rNNG7Ye1sNu0XIh4eGABlI++LXDH/rUyQE=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "3b5704ca-9eee-423e-9294-5adbed6fa365"
+        }
+    ]
+}

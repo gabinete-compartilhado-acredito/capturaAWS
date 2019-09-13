@@ -1,0 +1,18 @@
+{
+    "Aliases": [
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:SNSwarning:DEV",
+            "Name": "DEV",
+            "FunctionVersion": "$LATEST",
+            "Description": "Testing version",
+            "RevisionId": "9c293777-a54a-4324-9942-84f1ec2fe01c"
+        },
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:SNSwarning:JustLambda",
+            "Name": "JustLambda",
+            "FunctionVersion": "3",
+            "Description": "Version in production",
+            "RevisionId": "102beeb0-8279-4188-a45a-0842d7e9b88b"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "Aliases": [
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:dynamodb-delete-table:JustLambda",
+            "Name": "JustLambda",
+            "FunctionVersion": "2",
+            "Description": "step function independent",
+            "RevisionId": "624b7fcd-6333-4fcb-83b7-d470e13b8117"
+        },
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:dynamodb-delete-table:PROD",
+            "Name": "PROD",
+            "FunctionVersion": "1",
+            "Description": "",
+            "RevisionId": "af860592-4b1d-4875-97f8-da9b36904bfe"
+        }
+    ]
+}

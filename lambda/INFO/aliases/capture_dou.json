@@ -1,0 +1,11 @@
+{
+    "Aliases": [
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:capture_dou:PROD",
+            "Name": "PROD",
+            "FunctionVersion": "2",
+            "Description": "Production version, with cron trigger",
+            "RevisionId": "69d34534-d79e-402d-90f8-e630d58b622b"
+        }
+    ]
+}

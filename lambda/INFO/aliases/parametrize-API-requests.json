@@ -1,0 +1,25 @@
+{
+    "Aliases": [
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:parametrize-API-requests:DEV",
+            "Name": "DEV",
+            "FunctionVersion": "$LATEST",
+            "Description": "",
+            "RevisionId": "31abaf1e-db10-46b1-a113-c06a19829fa3"
+        },
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:parametrize-API-requests:JustLambda",
+            "Name": "JustLambda",
+            "FunctionVersion": "21",
+            "Description": "step function independent",
+            "RevisionId": "0bc1f139-2cfb-4e8f-94d0-ddf94d078bf2"
+        },
+        {
+            "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:parametrize-API-requests:PROD",
+            "Name": "PROD",
+            "FunctionVersion": "11",
+            "Description": "",
+            "RevisionId": "1f5f00e9-e5a8-4973-81a7-3101073f9d32"
+        }
+    ]
+}

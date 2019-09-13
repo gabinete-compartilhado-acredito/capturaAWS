@@ -1,0 +1,18 @@
+{
+    "http-request": {
+        "lambda": {
+            "url": "https://dadosabertos.camara.leg.br/arquivos/eventosPresencaDeputados/json/eventosPresencaDeputados-2019.json",
+            "params": {},
+            "headers": {},
+            "bucket": "brutos-publicos",
+            "key": "legislativo/camara/v2/eventos-presenca-deputados/camara-eventos-presenca-deputados_2019.json",
+            "data_type": "json",
+            "data_path": [
+                "dados"
+            ],
+            "exclude_keys": [
+                "statusProposicao"
+            ]
+        }
+    }
+}
