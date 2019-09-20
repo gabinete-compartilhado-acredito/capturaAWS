@@ -150,7 +150,10 @@ def response_to_dict_list(event, response):
         if debug:
             print('len(in_json):', len(in_json))
         save_to_s3 = True
-
+        
+        # Add capture date and url:
+        in_json = add_url_and_capture_date(in_json, event)
+        
     # Caso o dado seja dos dados abertos do congresso e tal:
     else:   
         # Prepara o arquivo baixado (response) em json:

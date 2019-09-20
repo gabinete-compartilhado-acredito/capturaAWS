@@ -304,6 +304,7 @@ def lambda_handler(event, context):
     # Faz a caputa efetivamente, com os parâmetros criados por generate_body e 
     # salvos por create_and_populate_dynamodb_table:
     
+    #return 0
     
     lambd.invoke(
         FunctionName='arn:aws:lambda:us-east-1:085250262607:function:http-request:JustLambda',

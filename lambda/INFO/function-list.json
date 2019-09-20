@@ -215,12 +215,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 5054,
+            "CodeSize": 5059,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 128,
-            "LastModified": "2019-08-16T18:17:45.139+0000",
-            "CodeSha256": "/Nin2WXue+jfauCVtBCgAPzTytIqUKNDDymK47y1oY4=",
+            "LastModified": "2019-09-19T19:23:09.074+0000",
+            "CodeSha256": "kWbEgnwqmJyS2ZRXB3amjt+lNKlUkFaUUBH6NdEwn3M=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -230,7 +230,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "84bd03ad-9acf-4bfb-87e8-2fbe42d88696",
+            "RevisionId": "12b3bc25-3f23-4cc6-9ee3-14a7c6965546",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
@@ -271,6 +271,24 @@
                 "Mode": "PassThrough"
             },
             "RevisionId": "1d107891-aefe-4e7d-814a-25ba461d3154"
+        },
+        {
+            "FunctionName": "capture_monthly",
+            "FunctionArn": "arn:aws:lambda:us-east-1:085250262607:function:capture_monthly",
+            "Runtime": "python3.7",
+            "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 452,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2019-09-19T19:46:11.914+0000",
+            "CodeSha256": "S6F9t43OILFcFxpwQVM7BUMsfAbQjkiRxzmx+3jPg7s=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "95af8065-6bb7-47ff-a397-40f1408e5a59"
         },
         {
             "FunctionName": "capture_dou",
@@ -497,12 +515,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 6248,
+            "CodeSize": 8156,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 448,
-            "LastModified": "2019-08-06T22:53:19.632+0000",
-            "CodeSha256": "0emY3FippRYA0VGQKz7zgtQoGRHcsZO3yQd0WkP3O7w=",
+            "LastModified": "2019-09-20T11:34:38.476+0000",
+            "CodeSha256": "x2fLfM/hcxvZelw2mLG1cbc5e8rxwpQrsF4DDOazmvA=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -512,7 +530,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "1cdbb9c4-62f1-4f1a-84f0-720303c62799",
+            "RevisionId": "7842ba66-46bf-4cf3-bbd6-a483bf1857aa",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:xmltodict:1",
@@ -529,6 +547,10 @@
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:requests:1",
                     "CodeSize": 904176
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:bs4:2",
+                    "CodeSize": 6102554
                 }
             ]
         },
