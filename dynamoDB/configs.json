@@ -1,0 +1,22 @@
+[
+ {
+  "slack_token": "not required",
+  "timedelta": 0,
+  "date_format": "%Y-%m-%d",
+  "last_extra": 0,
+  "end_date": "2019-09-26",
+  "storage_path": "not required",
+  "secao_all": [
+   1,
+   2,
+   "e"
+  ],
+  "secao": [
+   "e"
+  ],
+  "post_articles": true,
+  "name": "capture_DOU",
+  "save_articles": false,
+  "filter_file": "not_required"
+ }
+]

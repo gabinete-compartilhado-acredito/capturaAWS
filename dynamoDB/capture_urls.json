@@ -1,164 +1,1361 @@
-[{'parameters': [{'type': 'empty'}],
-  'data_path': ['ListaParlamentarLegislatura', 'Parlamentares', 'Parlamentar'],
-  'capture_type': 'daily',
-  'bucket': 'brutos-publicos',
-  'key': 'legislativo/senado/v1/senadores/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/47/56',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-senadores',
-  'data_type': 'json'},
- {'parameters': [{'name': 'year',
-    'body': {'from': Decimal('2019'), 'to': Decimal('2019')},
-    'type': 'from_to'}],
-  'data_path': ['ListaVotacoes', 'Votacoes', 'Votacao'],
-  'capture_type': 'daily',
-  'records_keys': ['Votos', 'VotoParlamentar'],
-  'bucket': 'brutos-publicos',
-  'key': 'legislativo/senado/v1/votacoes-plenario/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/plenario/lista/votacao/%(year)s0101/%(year)s1231',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-votacoes-plenario',
-  'data_type': 'json'},
- {'parameters': [{'query_config': {},
-    'url_params': ['id'],
-    'type': 'athena_query',
-    'query': 'SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senadores'}],
-  'data_path': ['VotacaoParlamentar', 'Parlamentar', 'Votacoes', 'Votacao'],
-  'capture_type': 'daily',
-  'bucket': 'brutos-publicos',
-  'dependence': 'senado-senadores',
-  'key': 'legislativo/senado/v1/senador-votacoes/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/senador/%(id)s/votacoes',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-senador-votacoes',
-  'data_type': 'json'},
-{'parameters': [{'query_config': {'date_format': '%Y-%m-%d %H:%i:%s'},
-    'url_params': ['id'],
-    'type': 'athena_query',
-    'query': "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('minute', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format)s'), '%(date_format)s')) < 60"}],
-  'data_path': ['DetalheMateria', 'Materia'],
-  'capture_type': 'live',
-  'bucket': 'brutos-publicos',
-  'exclude_keys': ['AtualizacoesRecentes'],
-  'key': 'legislativo/senado/v1/proposicoes/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/materia/%(id)s',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-proposicoes',
-  'data_type': 'json'},
- {'parameters': [{'query_config': {'date_format': '%Y-%m-%d %H:%i:%s'},
-    'url_params': ['id'],
-    'type': 'athena_query',
-    'query': "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('minute', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format)s'), '%(date_format)s')) < 60"}],
-  'data_path': ['MovimentacaoMateria', 'Materia', 'Tramitacoes', 'Tramitacao'],
-  'capture_type': 'live',
-  'bucket': 'brutos-publicos',
-  'key': 'legislativo/senado/v1/tramitacoes/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/materia/movimentacoes/%(id)s',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-tramitacoes',
-  'data_type': 'json'},
- {'parameters': [{'end_date': 'now',
-    'date_format': '%Y%m%d',
-    'timedelta': Decimal('-1'),
-    'type': 'date_start_end'}],
-  'data_path': ['ListaMateriasLegislaturaAtual', 'Materias', 'Materia'],
-  'capture_type': 'live',
-  'bucket': 'brutos-publicos',
-  'key': 'legislativo/senado/v1/proposicoes-tramitadas-periodo/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/materia/legislaturaatual?data=%(end_date)s',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-proposicoes-tramitadas-periodo',
-  'data_type': 'json'},
-{'parameters': [{'query_config': {},
-    'url_params': ['id'],
-    'type': 'athena_query',
-    'query': 'WITH d AS (SELECT distinct identificacaomateria.codigomateria as id FROM senado.proposicoes_lista) SELECT id FROM d WHERE id NOT IN (SELECT distinct identificacaomateria.codigomateria FROM senado.proposicoes)'}],
-  'data_path': ['DetalheMateria', 'Materia'],
-  'capture_type': 'historical',
-  'bucket': 'brutos-publicos',
-  'exclude_keys': ['AtualizacoesRecentes'],
-  'key': 'legislativo/senado/v1/proposicoes/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/materia/%(id)s',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-proposicoes',
-  'data_type': 'json'},
- {'parameters': [{'query_config': {},
-    'url_params': ['id'],
-    'type': 'athena_query',
-    'query': 'SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senadores'}],
-  'data_path': ['MateriasRelatoriaParlamentar',
-   'Parlamentar',
-   'Relatorias',
-   'Relatoria'],
-  'capture_type': 'historical',
-  'bucket': 'brutos-publicos',
-  'dependence': 'senado-senadores',
-  'key': 'legislativo/senado/v1/senador-relatorias/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/senador/%(id)s/relatorias',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-senador-relatorias',
-  'data_type': 'json'},
- {'parameters': [{'query_config': {},
-    'url_params': ['id'],
-    'type': 'athena_query',
-    'query': 'SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senador_lista_atual'}],
-  'data_path': ['MandatoParlamentar', 'Parlamentar'],
-  'capture_type': 'historical',
-  'bucket': 'brutos-publicos',
-  'dependence': 'senado-lista-atual',
-  'key': 'legislativo/senado/v1/senador-mandatos/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/senador/%(id)s/mandatos',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-senador-mandatos',
-  'data_type': 'json'},
- {'parameters': [{'name': 'year',
-    'body': {'from': Decimal('1988'), 'to': Decimal('2019')},
-    'type': 'from_to'}],
-  'data_path': ['ListaVotacoes', 'Votacoes', 'Votacao'],
-  'capture_type': 'historical',
-  'records_keys': ['Votos', 'VotoParlamentar'],
-  'bucket': 'brutos-publicos',
-  'key': 'legislativo/senado/v1/votacoes-plenario/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/plenario/lista/votacao/%(year)s0101/%(year)s1231',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-votacoes-plenario',
-  'data_type': 'json'},
- {'parameters': [{'name': 'year',
-    'body': {'from': Decimal('1988'), 'to': Decimal('2019')},
-    'type': 'from_to'}],
-  'data_path': ['PesquisaBasicaMateria', 'Materias', 'Materia'],
-  'capture_type': 'historical',
-  'bucket': 'brutos-publicos',
-  'exclude_keys': ['AtualizacoesRecentes'],
-  'key': 'legislativo/senado/v1/proposicoes-lista/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/materia/pesquisa/lista?ano=%(year)s',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-proposicoes-lista',
-  'data_type': 'json'},
- {'parameters': [{'query_config': {},
-    'url_params': ['id'],
-    'type': 'athena_query',
-    'query': 'SELECT identificacaoparlamentar.codigoparlamentar FROM senado.senadores'}],
-  'data_path': ['LiderancaParlamentar', 'Parlamentar'],
-  'capture_type': 'historical',
-  'records_keys': ['Liderancas', 'Lideranca'],
-  'bucket': 'brutos-publicos',
-  'dependence': {'name': 'senado-senadores', 'wait': Decimal('5')},
-  'key': 'legislativo/senado/v1/senador-liderancas/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/senador/%(id)s/liderancas',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-senador-liderancas',
-  'data_type': 'json'},
- {'parameters': [{'query_config': {},
-    'url_params': ['id'],
-    'type': 'athena_query',
-    'query': 'SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senadores'}],
-  'data_path': ['VotacaoParlamentar', 'Parlamentar', 'Votacoes', 'Votacao'],
-  'capture_type': 'historical',
-  'bucket': 'brutos-publicos',
-  'dependence': 'senado-senadores',
-  'key': 'legislativo/senado/v1/senador-votacoes/',
-  'url': 'http://legis.senado.leg.br/dadosabertos/senador/%(id)s/votacoes',
-  'headers': {'Accept': 'application/json'},
-  'name': 'senado-senador-votacoes',
-  'data_type': 'json'}]
+[
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT id FROM camara_v2.partidos"
+   }
+  ],
+  "data_path": "['dados']",
+  "capture_type": "daily",
+  "records_keys": null,
+  "bucket": "brutos-publicos",
+  "exclude_keys": null,
+  "dependence": null,
+  "key": "legislativo/camara/v2/partidos-membros/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/partidos/%(id)s/membros",
+  "headers": "{}",
+  "name": "camara-partidos-membros",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "end_date": "now",
+    "date_format": "%d/%m/%Y",
+    "timedelta": -7,
+    "type": "date_start_end"
+   }
+  ],
+  "data_path": [
+   "proposicoes",
+   "proposicao"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v1/proposicoes-tramitadas-periodo/",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesTramitadasNoPeriodo?dtInicio=%(start_date)s&dtFim=%(end_date)s",
+  "headers": {},
+  "name": "camara-proposicoes-tramitadas-periodo",
+  "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
+    "end_date": "now",
+    "date_format": "%d/%m/%Y",
+    "timedelta": -1,
+    "type": "date_start_end"
+   }
+  ],
+  "data_path": [
+   "proposicoes",
+   "proposicao"
+  ],
+  "capture_type": "live",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v1/proposicoes-tramitadas-periodo/",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesTramitadasNoPeriodo?dtInicio=%(start_date)s&dtFim=%(end_date)s",
+  "headers": {},
+  "name": "camara-proposicoes-tramitadas-periodo",
+  "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
+    "params": {
+     "end_date": "yesterday",
+     "debug": false,
+     "timedelta": 0,
+     "date_format": "%Y-%m-%d",
+     "save_articles": true,
+     "secao": [
+      1,
+      2,
+      3,
+      "e"
+     ],
+     "post_articles": false
+    },
+    "type": "external_module"
+   }
+  ],
+  "data_path": [],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "executivo/federal/dou/",
+  "headers": {},
+  "name": "executivo-federal-dou",
+  "data_type": "external_module"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "WITH d AS (SELECT distinct identificacaomateria.codigomateria as id FROM senado.proposicoes_lista) SELECT id FROM d WHERE id NOT IN (SELECT distinct identificacaomateria.codigomateria FROM senado.proposicoes)"
+   }
+  ],
+  "data_path": [
+   "DetalheMateria",
+   "Materia"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "exclude_keys": [
+   "AtualizacoesRecentes"
+  ],
+  "key": "legislativo/senado/v1/proposicoes/",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/%(id)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-proposicoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('minute', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format)s'), '%(date_format)s')) < 60"
+   }
+  ],
+  "data_path": [
+   "DetalheMateria",
+   "Materia"
+  ],
+  "capture_type": "live",
+  "bucket": "brutos-publicos",
+  "exclude_keys": [
+   "AtualizacoesRecentes"
+  ],
+  "key": "legislativo/senado/v1/proposicoes/",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/%(id)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-proposicoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados WHERE idlegislaturafinal = 56"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-despesas/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/despesas",
+  "headers": {},
+  "name": "camara-deputados-despesas",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-despesas/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/despesas",
+  "headers": {},
+  "name": "camara-deputados-despesas",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 1991,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/eventos-orgaos/",
+  "url": "http://dadosabertos.camara.leg.br/arquivos/eventosOrgaos/json/eventosOrgaos-%(id)s.json",
+  "headers": {},
+  "name": "camara-eventos-orgaos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "type": "empty"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/blocos/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/blocos",
+  "headers": {},
+  "name": "camara-blocos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%d/%m/%Y %H:%i:%s",
+     "date_format1": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('minute',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format1)s'), '%(date_format1)s')) < 60"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "live",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/proposicoes-live/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/%(id)s",
+  "headers": {},
+  "name": "camara-proposicoes-live",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%d/%m/%Y",
+     "date_format1": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "siglatipo",
+     "numero",
+     "ano"
+    ],
+    "type": "athena_query",
+    "query": "WITH d AS (SELECT CAST(codproposicao as integer) codproposicao FROM camara_v1.proposicoes_votadas_plenario WHERE  date_diff('day',  date_parse(datavotacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format1)s'), '%(date_format1)s')) < 100) SELECT DISTINCT siglatipo, numero, ano FROM d JOIN camara_v2.proposicoes t1 ON t1.id = d.codproposicao;"
+   }
+  ],
+  "data_path": [
+   "proposicao",
+   "Votacoes",
+   "Votacao"
+  ],
+  "capture_type": "daily",
+  "records_keys": [
+   "votos",
+   "Deputado"
+  ],
+  "bucket": "brutos-publicos",
+  "exclude_keys": [
+   "orientacaoBancada"
+  ],
+  "key": "legislativo/camara/v1/proposicao-votacao-deputado/",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=%(siglatipo)s&numero=%(numero)s&ano=%(ano)s",
+  "headers": {},
+  "name": "camara-proposicao-votacao-deputado",
+  "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT idlegislatura as id FROM camara_v2.legislaturas;"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputado-mesa/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/legislaturas/%(id)s",
+  "headers": {},
+  "name": "camara-deputados-mesa",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-mesa/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/mesa",
+  "headers": {},
+  "name": "camara-deputados-mesa",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT CAST(id AS varchar) FROM camara_v2.proposicoes WHERE CAST(id AS varchar) NOT IN (SELECT DISTINCT SPLIT(api_url, '/')[7] FROM camara_v2.tramitacoes)"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/tramitacoes/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/%(id)s/tramitacoes",
+  "headers": {},
+  "name": "camara-tramitacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%d/%m/%Y %H:%i:%s",
+     "date_format1": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('minute',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format1)s'), '%(date_format1)s')) < 60"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "live",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/tramitacoes/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/%(id)s/tramitacoes",
+  "headers": {},
+  "name": "camara-tramitacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%d/%m/%Y %H:%i:%s",
+     "date_format1": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('day',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format1)s'), '%(date_format1)s')) < 7"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "semi-historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/tramitacoes/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/%(id)s/tramitacoes",
+  "headers": {},
+  "name": "camara-tramitacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados WHERE idlegislaturafinal = 56"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-discursos/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/discursos",
+  "headers": {},
+  "name": "camara-deputados-discursos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-discursos/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/discursos",
+  "headers": {},
+  "name": "camara-deputados-discursos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "type": "empty"
+   }
+  ],
+  "data_path": [
+   "ListaParlamentarLegislatura",
+   "Parlamentares",
+   "Parlamentar"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/v1/senadores/",
+  "url": "http://legis.senado.leg.br/dadosabertos/senador/lista/legislatura/47/56",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-senadores",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 2019,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/proposicoes-temas/",
+  "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoesTemas/json/proposicoesTemas-%(id)s.json",
+  "headers": {},
+  "name": "camara-proposicoes-temas",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 1988,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/proposicoes-temas/",
+  "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoesTemas/json/proposicoesTemas-%(id)s.json",
+  "headers": {},
+  "name": "camara-proposicoes-temas",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%d/%m/%Y",
+     "date_format1": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "siglatipo",
+     "numero",
+     "ano"
+    ],
+    "type": "athena_query",
+    "query": "WITH d AS (SELECT CAST(codproposicao as integer) codproposicao FROM camara_v1.proposicoes_votadas_plenario WHERE  date_diff('day',  date_parse(datavotacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format1)s'), '%(date_format1)s')) < 100) SELECT DISTINCT siglatipo, numero, ano FROM d JOIN camara_v2.proposicoes t1 ON t1.id = d.codproposicao;"
+   }
+  ],
+  "data_path": [
+   "proposicao",
+   "Votacoes",
+   "Votacao"
+  ],
+  "capture_type": "daily",
+  "records_keys": [
+   "orientacaoBancada",
+   "bancada"
+  ],
+  "bucket": "brutos-publicos",
+  "exclude_keys": [
+   "votos"
+  ],
+  "key": "legislativo/camara/v1/proposicao-votacao-bancada/",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=%(siglatipo)s&numero=%(numero)s&ano=%(ano)s",
+  "headers": {},
+  "name": "camara-proposicao-votacao-bancada",
+  "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT id FROM camara_v2.partidos"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/partidos-detalhes/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/partidos/%(id)s",
+  "headers": {},
+  "name": "camara-partidos-detalhes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "type": "empty"
+   }
+  ],
+  "data_path": [
+   "proposicoes",
+   "proposicao"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v1/proposicoes-votadas-plenario/",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2019&tipo=",
+  "headers": {},
+  "name": "camara-proposicoes-votadas-plenario",
+  "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 1991,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "proposicoes",
+   "proposicao"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v1/proposicoes-votadas-plenario/",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=%(id)s&tipo=",
+  "headers": {},
+  "name": "camara-proposicoes-votadas-plenario",
+  "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados WHERE idlegislaturafinal = 56"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-detalhes/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s",
+  "headers": {},
+  "name": "camara-deputados-detalhes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "WITH d AS (SELECT DISTINCT split(uri, '/')[7] as id FROM camara_v2.deputados) SELECT id FROM d WHERE id NOT IN (SELECT DISTINCT CAST(id AS VARCHAR) FROM camara_v2.deputados_detalhes)"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-detalhes/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s",
+  "headers": {},
+  "name": "camara-deputados-detalhes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "end_date": "now",
+    "date_format": "%d/%m/%Y",
+    "timedelta": -1,
+    "type": "date_start_end"
+   }
+  ],
+  "data_path": [
+   "bancadas",
+   "bancada"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v1/liderancas/",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Deputados.asmx/ObterLideresBancadas?%(start_date)s",
+  "headers": {},
+  "name": "camara-liderancas",
+  "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados WHERE idlegislaturafinal = 56"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-orgaos/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/orgaos",
+  "headers": {},
+  "name": "camara-deputados-orgaos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-orgaos/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/orgaos",
+  "headers": {},
+  "name": "camara-deputados-orgaos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%dT%H:%i:%s"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT id FROM camara_v2.eventos WHERE date_diff('day', current_timestamp, date_parse( datahorainicio, '%(date_format)s')) > -10"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/eventos-pauta/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/eventos/%(id)s/pauta",
+  "headers": {},
+  "name": "camara-eventos-pauta",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 2019,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/proposicoes/",
+  "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoes/json/proposicoes-%(id)s.json",
+  "headers": {},
+  "name": "camara-proposicoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 1988,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/proposicoes/",
+  "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoes/json/proposicoes-%(id)s.json",
+  "headers": {},
+  "name": "camara-proposicoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senadores"
+   }
+  ],
+  "data_path": [
+   "MateriasRelatoriaParlamentar",
+   "Parlamentar",
+   "Relatorias",
+   "Relatoria"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "dependence": {
+   "name": "senado-senadores",
+   "wait": 1
+  },
+  "key": "legislativo/senado/v1/senador-relatorias/",
+  "url": "http://legis.senado.leg.br/dadosabertos/senador/%(id)s/relatorias",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-senador-relatorias",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 2019,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/proposicoes-autores/",
+  "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoesAutores/json/proposicoesAutores-%(id)s.json",
+  "headers": {},
+  "name": "camara-proposicoes-autores",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 1988,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/proposicoes-autores/",
+  "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoesAutores/json/proposicoesAutores-%(id)s.json",
+  "headers": {},
+  "name": "camara-proposicoes-autores",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('minute', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format)s'), '%(date_format)s')) < 60"
+   }
+  ],
+  "data_path": [
+   "MovimentacaoMateria",
+   "Materia",
+   "Tramitacoes",
+   "Tramitacao"
+  ],
+  "capture_type": "live",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/v1/tramitacoes/",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/movimentacoes/%(id)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-tramitacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "type": "empty"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados/",
+  "url": "http://dadosabertos.camara.leg.br/arquivos/deputados/json/deputados.json",
+  "headers": {},
+  "name": "camara-deputados",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "type": "empty"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/orgaos/",
+  "url": "http://dadosabertos.camara.leg.br/arquivos/orgaos/json/orgaos.json",
+  "headers": {},
+  "name": "camara-orgaos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "end_date": "now",
+    "date_format": "%Y%m%d",
+    "timedelta": -1,
+    "type": "date_start_end"
+   }
+  ],
+  "data_path": [
+   "ListaMateriasLegislaturaAtual",
+   "Materias",
+   "Materia"
+  ],
+  "capture_type": "live",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/v1/proposicoes-tramitadas-periodo/",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/legislaturaatual?data=%(end_date)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-proposicoes-tramitadas-periodo",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id",
+     "ano",
+     "mes"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT split(uri, '/')[7] as id, YEAR(CURRENT_DATE) AS ano, MONTH(CURRENT_DATE) AS mes FROM camara_v2.deputados WHERE idlegislaturafinal = 56"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/scrapping/comissionados/",
+  "url": "https://www.camara.leg.br/deputados/%(id)s/pessoal-gabinete?ano=%(ano)s",
+  "headers": {},
+  "name": "camara-deputados-comissionados",
+  "data_type": "external_module"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id",
+     "ano",
+     "mes"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT split(uri, '/')[7] as id, YEAR(CURRENT_DATE) AS ano, MONTH(CURRENT_DATE) AS mes FROM camara_v2.deputados WHERE idlegislaturafinal = 56"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "monthly",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/scrapping/comissionados/",
+  "url": "https://www.camara.leg.br/deputados/%(id)s/pessoal-gabinete?ano=%(ano)s",
+  "headers": {},
+  "name": "camara-deputados-comissionados",
+  "data_type": "external_module"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senador_lista_atual"
+   }
+  ],
+  "data_path": [
+   "MandatoParlamentar",
+   "Parlamentar"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "dependence": {
+   "name": "senado-lista-atual",
+   "wait": 1
+  },
+  "key": "legislativo/senado/v1/senador-mandatos/",
+  "url": "http://legis.senado.leg.br/dadosabertos/senador/%(id)s/mandatos",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-senador-mandatos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "type": "empty"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/legislaturas/",
+  "url": "http://dadosabertos.camara.leg.br/arquivos/legislaturas/json/legislaturas.json",
+  "headers": {},
+  "name": "camara-legislaturas",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "year",
+    "body": {
+     "from": 2019,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "ListaVotacoes",
+   "Votacoes",
+   "Votacao"
+  ],
+  "capture_type": "daily",
+  "records_keys": [
+   "Votos",
+   "VotoParlamentar"
+  ],
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/v1/votacoes-plenario/",
+  "url": "http://legis.senado.leg.br/dadosabertos/plenario/lista/votacao/%(year)s0101/%(year)s1231",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-votacoes-plenario",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "year",
+    "body": {
+     "from": 1988,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "ListaVotacoes",
+   "Votacoes",
+   "Votacao"
+  ],
+  "capture_type": "historical",
+  "records_keys": [
+   "Votos",
+   "VotoParlamentar"
+  ],
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/v1/votacoes-plenario/",
+  "url": "http://legis.senado.leg.br/dadosabertos/plenario/lista/votacao/%(year)s0101/%(year)s1231",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-votacoes-plenario",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "type": "empty"
+   }
+  ],
+  "data_path": [
+   "blocos",
+   "bloco"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v1/deputados-blocos/",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Deputados.asmx/ObterPartidosBlocoCD?numLegislatura=&idBloco=",
+  "headers": {},
+  "name": "camara-blocos-v1",
+  "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 1991,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/eventos/",
+  "url": "http://dadosabertos.camara.leg.br/arquivos/eventos/json/eventos-%(id)s.json",
+  "headers": {},
+  "name": "camara-eventos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "type": "empty"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/partidos/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/partidos?itens=100&ordem=ASC&ordenarPor=sigla",
+  "headers": {},
+  "name": "camara-partidos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "year",
+    "body": {
+     "from": 1988,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "PesquisaBasicaMateria",
+   "Materias",
+   "Materia"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "exclude_keys": [
+   "AtualizacoesRecentes"
+  ],
+  "key": "legislativo/senado/v1/proposicoes-lista/",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/pesquisa/lista?ano=%(year)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-proposicoes-lista",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 1991,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/eventos-presenca-deputados/",
+  "url": "http://dadosabertos.camara.leg.br/arquivos/eventosPresencaDeputados/json/eventosPresencaDeputados-%(id)s.json",
+  "headers": {},
+  "name": "camara-eventos-presenca-deputados",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaoparlamentar.codigoparlamentar FROM senado.senadores"
+   }
+  ],
+  "data_path": [
+   "LiderancaParlamentar",
+   "Parlamentar"
+  ],
+  "capture_type": "historical",
+  "records_keys": [
+   "Liderancas",
+   "Lideranca"
+  ],
+  "bucket": "brutos-publicos",
+  "dependence": {
+   "name": "senado-senadores",
+   "wait": 1
+  },
+  "key": "legislativo/senado/v1/senador-liderancas/",
+  "url": "http://legis.senado.leg.br/dadosabertos/senador/%(id)s/liderancas",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-senador-liderancas",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senadores"
+   }
+  ],
+  "data_path": [
+   "VotacaoParlamentar",
+   "Parlamentar",
+   "Votacoes",
+   "Votacao"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "dependence": {
+   "name": "senado-senadores",
+   "wait": 1
+  },
+  "key": "legislativo/senado/v1/senador-votacoes/",
+  "url": "http://legis.senado.leg.br/dadosabertos/senador/%(id)s/votacoes",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-senador-votacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senadores"
+   }
+  ],
+  "data_path": [
+   "VotacaoParlamentar",
+   "Parlamentar",
+   "Votacoes",
+   "Votacao"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "dependence": {
+   "name": "senado-senadores",
+   "wait": 1
+  },
+  "key": "legislativo/senado/v1/senador-votacoes/",
+  "url": "http://legis.senado.leg.br/dadosabertos/senador/%(id)s/votacoes",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-senador-votacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados WHERE idlegislaturafinal = 56"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-eventos/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/eventos",
+  "headers": {},
+  "name": "camara-deputados-eventos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/deputados-eventos/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/eventos",
+  "headers": {},
+  "name": "camara-deputados-eventos",
+  "data_type": "json"
+ }
+]
