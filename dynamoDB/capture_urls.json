@@ -17,7 +17,7 @@
   "exclude_keys": null,
   "dependence": null,
   "key": "legislativo/camara/v2/partidos-membros/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/partidos/%(id)s/membros",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/partidos/%(id)s/membros?itens=100",
   "headers": "{}",
   "name": "camara-partidos-membros",
   "data_type": "json"
@@ -167,7 +167,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-despesas/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/despesas",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/despesas?itens=100",
   "headers": {},
   "name": "camara-deputados-despesas",
   "data_type": "json"
@@ -189,7 +189,7 @@
   "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-despesas/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/despesas",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/despesas?itens=100",
   "headers": {},
   "name": "camara-deputados-despesas",
   "data_type": "json"
@@ -228,7 +228,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/blocos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/blocos",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/blocos?itens=100",
   "headers": {},
   "name": "camara-blocos",
   "data_type": "json"
@@ -427,7 +427,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-discursos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/discursos",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/discursos?itens=100",
   "headers": {},
   "name": "camara-deputados-discursos",
   "data_type": "json"
@@ -449,7 +449,7 @@
   "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-discursos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/discursos",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/discursos?itens=100",
   "headers": {},
   "name": "camara-deputados-discursos",
   "data_type": "json"
@@ -700,7 +700,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-orgaos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/orgaos",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/orgaos?itens=100",
   "headers": {},
   "name": "camara-deputados-orgaos",
   "data_type": "json"
@@ -722,7 +722,7 @@
   "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-orgaos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/orgaos",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/orgaos?itens=100",
   "headers": {},
   "name": "camara-deputados-orgaos",
   "data_type": "json"
@@ -1331,7 +1331,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-eventos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/eventos",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/eventos?itens=100",
   "headers": {},
   "name": "camara-deputados-eventos",
   "data_type": "json"
@@ -1353,7 +1353,7 @@
   "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-eventos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/eventos",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/eventos?itens=100",
   "headers": {},
   "name": "camara-deputados-eventos",
   "data_type": "json"

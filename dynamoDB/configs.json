@@ -3,8 +3,8 @@
   "slack_token": "not required",
   "timedelta": 0,
   "date_format": "%Y-%m-%d",
-  "last_extra": 0,
-  "end_date": "2019-09-26",
+  "last_extra": 1,
+  "end_date": "2019-09-27",
   "storage_path": "not required",
   "secao_all": [
    1,
