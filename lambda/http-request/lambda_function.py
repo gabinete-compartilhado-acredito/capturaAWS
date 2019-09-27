@@ -230,14 +230,19 @@ def load_params(event):
     # Além do item, o .get_item também devolve metadados. Aqui 
     # pegamos apenas o item mesmo:
     return response['Item']
+
+  
+def copy_s3_to_storage_gcp(order, bucket, key):
+    """
+    Inputs:
+    - 'order': an int that specifies the target url in a temp table;
+    - 'bucket': the bucket in which the file is stored in AWS and GCP;
+    - 'key': the "file path" of the file.
     
-def call_next_step(params):
+    This function calls the lambda function that copies the file from AWS
+    to GCP storage.
     """
-    According to the configuration in params:
-    -- Copy downloaded file from S3 to Google storage;
-    -- If this is the last entry in dynamo temp table, finish and delete temp table;
-    -- Else, restart the process with lower order (next GET target).
-    """
+    params = {'order': order, 'bucket': bucket, 'key': key}
     
     lambd = boto3.client('lambda')
     
@@ -247,11 +252,61 @@ def call_next_step(params):
          FunctionName='arn:aws:lambda:us-east-1:085250262607:function:write-to-storage-gcp:JustLambda',
          InvocationType='Event',
          Payload=json.dumps(params))
+
+ 
+def get_and_save(params, event):
+    """
+    Input:
+    - 'params': a dict with a dynamoDB temp table name and an position ('order') of a 
+      data in the table;
+    - 'event': a dict with lots of info about the data location, type, parts to extract, 
+      where to save it, etc.
+      
+    This function downloads the data and save it to AWS S3 and Google Storage.
+    """ 
+    # Set max_retries for HTTP GET to 3:
+    session = requests.Session()
+    session.mount('http', requests.adapters.HTTPAdapter(max_retries=3))
+    
+    # Pega o arquivo especificado pelo url no event:
+    if debug:
+        print('GET file...')
+    response = session.get(event['url'], 
+                           params=event['params'], 
+                           headers=event['headers'], # configs para HTTP GET.
+                           timeout=30)
+
+    # Rodou bem:                       
+    if response.status_code == 200:
+        if debug:
+            print('GET successful. Writing to S3...')
+        # Salva arquivo baixado no S3 (Amazon), além de outras coisas:
+        # (também registra o destino do arquivo)
+        status_code_s3 = write_to_s3(event, response)
+        if debug:
+            print(status_code_s3)
+
+        # Copy the result to GCP storage:
+        copy_s3_to_storage_gcp(params['order'], event['bucket'], event['key'])
+
+        # TODO: colocar como lidar com erros no GET.
+    
+    return response
+    
+
+def call_next_step(params):
+    """
+    According to the configuration in params:
+    -- Copy downloaded file from S3 to Google storage (deactivated, passed to outside);
+    -- If this is the last entry in dynamo temp table, finish and delete temp table;
+    -- Else, restart the process with lower order (next GET target).
+    """
+    
+    lambd = boto3.client('lambda')
     
     # check if loop is done
     if params['order'] <= 0:
         
-        pass
         if debug:
             print('Deleting DynamoDB')
         
@@ -286,8 +341,8 @@ def lambda_handler(params, context):
     dynamo_exceptions = boto3.client('dynamodb').exceptions
     
     # Set max_retries for HTTP GET to 3:
-    session = requests.Session()
-    session.mount('http', requests.adapters.HTTPAdapter(max_retries=3))
+    #session = requests.Session()
+    #session.mount('http', requests.adapters.HTTPAdapter(max_retries=3))
     
     try:
         if debug:
@@ -295,32 +350,12 @@ def lambda_handler(params, context):
         # Carrega dicionário do dynamo:
         event = load_params(params)
         
-        #print(event['url'])
-        print(event)
-        # Pega o arquivo especificado pelo url no event:
-        if debug:
-            print('GET file...')
-        response = session.get(event['url'], 
-                               params=event['params'], 
-                               headers=event['headers'], # configs para HTTP GET.
-                               timeout=30)
-        
-        # Rodou bem:                       
-        if response.status_code == 200:
-            if debug:
-                print('GET successful. Writing to S3...')
-           # Salva arquivo baixado no S3 (Amazon), além de outras coisas:
-           # (também registra o destino do arquivo)
-            status_code_s3 = write_to_s3(event, response)
-    
-            if debug:
-                print(status_code_s3)
-        
-        # TODO: colocar como lidar com erros no GET.
+        # Download data and save it to AWS and GCP:
+        get_and_save(params, event)
         
         # Guarda em params o destino do arquivo:
-        params.update({'bucket': event['bucket'], 'key': event['key']})
-    
+        #params.update({'bucket': event['bucket'], 'key': event['key']})
+        
     except dynamo_exceptions.ResourceNotFoundException:
         
         print('DynamoDB Table does not exist')    
@@ -330,6 +365,5 @@ def lambda_handler(params, context):
         
         # Raise error somewhere, maybe slack
         print(e)
-    
         
     call_next_step(params)
