@@ -294,6 +294,41 @@ def get_and_save(params, event):
     return response
     
 
+def get_next_page(event, response):
+    """
+    Input:
+    - 'event':    a dict with all info about the data to be captured and saved;
+    - 'response': a response from a HTTP GET request.
+    
+    For APIs that return paginated data, get from the last request response the 
+    next page to be downloaded.
+    
+    Returns: a dict with:
+    - 'key' (the file path where to save the data's next page);
+    - 'url' (the address of the data's next page).
+    """
+    # Parse JSON:
+    raw_data = load_as_json(event, response)
+    
+    # Case Dados Abertos da câmara dos deputados:
+    if 'links' in raw_data.keys():
+        
+        # Look for next page link:
+        next_url_set = {d['href'] for d in filter(lambda d: d['rel'] == 'next', raw_data['links'])}
+        if len(next_url_set) > 1:
+            raise Exception('Unexpected case: more than one "next" link.')
+        # If found, get link and set its key:
+        elif len(next_url_set) == 1:
+            next_url = list(next_url_set)[0]
+            page_num = re.search('pagina=(\d+)', next_url).group(1)
+            next_key = re.sub('(_p\d+)?\.json', '_p' + page_num + '.json', event['key'])
+            
+            return {'key': next_key, 'url': next_url}
+    
+    # Default case:
+    return None
+    
+
 def call_next_step(params):
     """
     According to the configuration in params:
@@ -337,25 +372,31 @@ def lambda_handler(params, context):
     params.
     """
     
+    print(params)
+    
     # Para poder pegar os erros que acontecerão no dynamo:
     dynamo_exceptions = boto3.client('dynamodb').exceptions
-    
-    # Set max_retries for HTTP GET to 3:
-    #session = requests.Session()
-    #session.mount('http', requests.adapters.HTTPAdapter(max_retries=3))
-    
+        
     try:
         if debug:
             print('Loading params...')
         # Carrega dicionário do dynamo:
         event = load_params(params)
-        
+
         # Download data and save it to AWS and GCP:
-        get_and_save(params, event)
-        
-        # Guarda em params o destino do arquivo:
-        #params.update({'bucket': event['bucket'], 'key': event['key']})
-        
+        response  = get_and_save(params, event)
+        next_page = get_next_page(event, response)
+
+        # While there are more pages, get it and repeat the capture process:
+        while next_page != None:
+            # Update event for next page:
+            event['key'] = next_page['key']
+            event['url'] = next_page['url']
+    
+            # Get next page of data:
+            response  = get_and_save(params, event)
+            next_page = get_next_page(event, response) 
+    
     except dynamo_exceptions.ResourceNotFoundException:
         
         print('DynamoDB Table does not exist')    
