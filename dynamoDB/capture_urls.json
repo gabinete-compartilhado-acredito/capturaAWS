@@ -197,12 +197,14 @@
  {
   "parameters": [
    {
-    "name": "id",
-    "body": {
-     "from": 1991,
-     "to": 2019
+    "query_config": {
+     "date_format": "%Y-%m-%dT%H:%i"
     },
-    "type": "from_to"
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT id FROM camara_v2.eventos WHERE date_diff('day', current_timestamp, date_parse( datahorainicio, '%(date_format)s')) > -10"
    }
   ],
   "data_path": [
@@ -211,7 +213,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/eventos-orgaos/",
-  "url": "http://dadosabertos.camara.leg.br/arquivos/eventosOrgaos/json/eventosOrgaos-%(id)s.json",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/eventos/%(id)s/orgaos",
   "headers": {},
   "name": "camara-eventos-orgaos",
   "data_type": "json"
@@ -261,6 +263,28 @@
  {
   "parameters": [
    {
+    "name": "id",
+    "body": {
+     "from": 1991,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/eventos-historical/",
+  "url": "http://dadosabertos.camara.leg.br/arquivos/eventos/json/eventos-%(id)s.json",
+  "headers": {},
+  "name": "camara-eventos-historical",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
     "query_config": {
      "date_format": "%d/%m/%Y",
      "date_format1": "%Y-%m-%d %H:%i:%s"
@@ -293,6 +317,28 @@
   "headers": {},
   "name": "camara-proposicao-votacao-deputado",
   "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
+    "name": "id",
+    "body": {
+     "from": 1991,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/eventos-historical-presenca-deputados/",
+  "url": "http://dadosabertos.camara.leg.br/arquivos/eventosPresencaDeputados/json/eventosPresencaDeputados-%(id)s.json",
+  "headers": {},
+  "name": "camara-eventos-historical-presenca-deputados",
+  "data_type": "json"
  },
  {
   "parameters": [
@@ -522,6 +568,28 @@
  {
   "parameters": [
    {
+    "name": "id",
+    "body": {
+     "from": 1991,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/eventos-historical-orgaos/",
+  "url": "http://dadosabertos.camara.leg.br/arquivos/eventosOrgaos/json/eventosOrgaos-%(id)s.json",
+  "headers": {},
+  "name": "camara-eventos-historical-orgaos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
     "query_config": {
      "date_format": "%d/%m/%Y",
      "date_format1": "%Y-%m-%d %H:%i:%s"
@@ -731,7 +799,7 @@
   "parameters": [
    {
     "query_config": {
-     "date_format": "%Y-%m-%dT%H:%i:%s"
+     "date_format": "%Y-%m-%dT%H:%i"
     },
     "url_params": [
      "id"
@@ -1132,12 +1200,10 @@
  {
   "parameters": [
    {
-    "name": "id",
-    "body": {
-     "from": 1991,
-     "to": 2019
-    },
-    "type": "from_to"
+    "end_date": "yesterday",
+    "date_format": "%Y-%m-%d",
+    "timedelta": 10,
+    "type": "date_start_end"
    }
   ],
   "data_path": [
@@ -1146,7 +1212,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/eventos/",
-  "url": "http://dadosabertos.camara.leg.br/arquivos/eventos/json/eventos-%(id)s.json",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/eventos?dataInicio=%(start_date)s&dataFim=%(start_date)s&itens=100&ordem=ASC&ordenarPor=dataHoraInicio",
   "headers": {},
   "name": "camara-eventos",
   "data_type": "json"
@@ -1195,28 +1261,6 @@
    "Accept": "application/json"
   },
   "name": "senado-proposicoes-lista",
-  "data_type": "json"
- },
- {
-  "parameters": [
-   {
-    "name": "id",
-    "body": {
-     "from": 1991,
-     "to": 2019
-    },
-    "type": "from_to"
-   }
-  ],
-  "data_path": [
-   "dados"
-  ],
-  "capture_type": "daily",
-  "bucket": "brutos-publicos",
-  "key": "legislativo/camara/v2/eventos-presenca-deputados/",
-  "url": "http://dadosabertos.camara.leg.br/arquivos/eventosPresencaDeputados/json/eventosPresencaDeputados-%(id)s.json",
-  "headers": {},
-  "name": "camara-eventos-presenca-deputados",
   "data_type": "json"
  },
  {

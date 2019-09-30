@@ -215,12 +215,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 5059,
+            "CodeSize": 5457,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 128,
-            "LastModified": "2019-09-19T19:23:09.074+0000",
-            "CodeSha256": "kWbEgnwqmJyS2ZRXB3amjt+lNKlUkFaUUBH6NdEwn3M=",
+            "LastModified": "2019-09-30T18:46:02.756+0000",
+            "CodeSha256": "wr5h3sLBFK1KTKUO1jSeVAkUGm6kGAq8uAX5ZSdqkqk=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -230,7 +230,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "12b3bc25-3f23-4cc6-9ee3-14a7c6965546",
+            "RevisionId": "e3934577-0ef7-4da6-b3c2-6d780bf21fb0",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
@@ -439,12 +439,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 1610,
+            "CodeSize": 1640,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 1088,
-            "LastModified": "2019-07-17T21:56:14.292+0000",
-            "CodeSha256": "5i2OOJvLRx/NGBKyNa/0lizdQ9kvmA9nZQMW4CELUQ4=",
+            "LastModified": "2019-09-30T19:52:11.785+0000",
+            "CodeSha256": "UECQMOXT9RyScNDiTtmyBYsK8heB78c9peoav/fFmfw=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -459,7 +459,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "8bc5e840-93a3-4f47-9b60-ee7675100a8b",
+            "RevisionId": "9ef145a1-3195-4102-8e6e-3450bc663c5b",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:bigquery-schema-generator:1",
@@ -519,8 +519,8 @@
             "Description": "",
             "Timeout": 900,
             "MemorySize": 448,
-            "LastModified": "2019-09-27T20:24:12.621+0000",
-            "CodeSha256": "0YOKfuECD7QqlkiQCKIe9GLHafeiPVAot6bor3m0VHs=",
+            "LastModified": "2019-09-30T17:43:41.859+0000",
+            "CodeSha256": "B/IgYpAtt867RimHGgUe6KL3wF29hvYxjZ5ONNnWmSc=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -530,7 +530,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "aa13edba-9628-4b91-935c-79f09c069b4d",
+            "RevisionId": "4310c9f2-f137-412d-88b0-117749f9cba2",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:xmltodict:1",

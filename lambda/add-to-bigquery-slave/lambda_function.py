@@ -5,6 +5,9 @@ import boto3
 import os
 from bigquery_schema_generator.generate_schema import SchemaGenerator
 
+# For debugging:
+debug = False
+
 # Get authentication key for google cloud:
 client = boto3.client('s3')
 a = client.get_object(
@@ -74,12 +77,15 @@ def save_raw_data_to_local(bucket, prefix):
     # print(client.list_objects_v2(Bucket=bucket,Prefix=prefix))
     for i, obj in enumerate(client.list_objects_v2(Bucket=bucket,
                                                   Prefix=prefix)['Contents']):
-       if i > 100:
-           print('breaking')
-           break
+        if i > 100:
+            print('breaking')
+            break
     
-       a = client.get_object(Bucket=bucket, Key=obj['Key'])['Body'].read().decode()
-       open(RAW_DATA, 'a+').write(a + '\n')
+        if debug:
+            print(obj)
+        
+        a = client.get_object(Bucket=bucket, Key=obj['Key'])['Body'].read().decode()
+        open(RAW_DATA, 'a+').write(a + '\n')
 
 
 def generate_schema(replace_time_types=True, extra_types=[]):

@@ -11,7 +11,7 @@ sys.path.insert(0, "external_modules")
 import importlib
 
 # Switch for printing messages to log:
-debug = False
+debug = True
 
 def forms_athena_query(par, item, forms):
     """
@@ -88,6 +88,26 @@ def forms_from_external_list(par, item, forms, event):
     
     return forms
 
+
+def daterange(start_date, end_date):
+    """
+    Given a 'start_date' and an 'end_date' (datetimes), returns a generator
+    for dates in that range, with the same behaviour as 'range' (i.e. excludes 
+    the 'end_date' from the returned values).
+    
+    NOTE: if 'start_date' > 'end_date', it returns the dates from 'end_date' 
+    to 'start_date', excluding 'start_date' instead of 'end_date'. In other
+    words, it always excludes the farthest future date.
+    """
+    if end_date - start_date < timedelta(0):
+        temp_date  = end_date
+        end_date   = start_date
+        start_date = temp_date
+    
+    for n in range(int ((end_date - start_date).days)):
+        yield start_date + timedelta(n)
+
+
 def forms_date_start_end(par, item, forms):
     """
     A partir de um modelo de URL e de filename, cria realizações concretas 
@@ -95,20 +115,37 @@ def forms_date_start_end(par, item, forms):
     As datas tem formato definido por date_format que vem no input.
     """
     
-    def daterange(start_date, end_date):
-        for n in range(int ((end_date - start_date).days)):
-            yield start_date + timedelta(n)
-    
-    end_date = date.today() if par['end_date'] == 'now' else datetime.strptime(par['end_date'], par['date_format'])
+    # Parse relative or specified capture's end date: 
+    if par['end_date'] == 'yesterday':
+        end_date = date.today() - timedelta(1)
+    elif par['end_date'] == 'now':
+        end_date = date.today()
+    else:
+        end_date = datetime.strptime(par['end_date'], par['date_format'])
 
     start_date = end_date + timedelta(par['timedelta'])
     
     for single_date in daterange(start_date, end_date):
         dates = {'start_date': single_date, 'end_date': single_date + timedelta(1)}
+        
+        # Create filename for data:
+        # In case both dates are required in the url:
+        if (item['url'].find('start_date') != -1) and (item['url'].find('end_date') != -1):
+            filename = '_'.join([item['name'],
+                                          datetime.strftime(dates['start_date'], '%Y-%m-%d'),
+                                          datetime.strftime(dates['end_date'], '%Y-%m-%d'),]) + '.json'
+        # In case only the start date is required in the url:
+        elif item['url'].find('start_date') != -1:
+            filename = '_'.join([item['name'], datetime.strftime(dates['start_date'], '%Y-%m-%d')]) + '.json'
+        # In case only the end date is required in the url:
+        elif item['url'].find('end_date') != -1:
+            filename = '_'.join([item['name'], datetime.strftime(dates['end_date'], '%Y-%m-%d')]) + '.json'
+        # In case no dates are required in the URL:
+        else:
+            filename = item['name'] + '.json'
+
         forms.append({'url': item['url'] % {key: datetime.strftime(value, par['date_format']) for key, value in dates.items()},
-            'filename': '_'.join([item['name'],
-                                  datetime.strftime(dates['start_date'], '%Y-%m-%d'),
-                                  datetime.strftime(dates['end_date'], '%Y-%m-%d'),]) + '.json'})
+            'filename': filename})
     
     return forms
 
