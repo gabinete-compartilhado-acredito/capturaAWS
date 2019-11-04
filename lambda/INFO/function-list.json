@@ -296,12 +296,12 @@
             "Runtime": "python3.6",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 20574,
+            "CodeSize": 20586,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 192,
-            "LastModified": "2019-11-04T18:43:37.096+0000",
-            "CodeSha256": "iSq9FDQFnvw2OUYQBCU4y2Njagl8utxSXUDUudaAA6Y=",
+            "LastModified": "2019-11-04T19:08:23.329+0000",
+            "CodeSha256": "885P4H59iXwhUNNRITjHd/SBr4b3N2VxRJKu4UPJqeo=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -316,7 +316,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "dcd93492-95e7-4275-b16c-c0f653504bc3",
+            "RevisionId": "9cfc17da-19fe-443e-8800-f994f8abc438",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:requests:1",
@@ -515,12 +515,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 9151,
+            "CodeSize": 9162,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 448,
-            "LastModified": "2019-10-22T16:29:02.100+0000",
-            "CodeSha256": "Xf5Ow2SxifaBaiohbW6hwfsMmuzb3dh4LnZ7oig66EE=",
+            "LastModified": "2019-11-04T19:04:52.457+0000",
+            "CodeSha256": "AK0iZ34WW2jtY93Tsf7XKhirozP8IZCXfUkfdArjYiU=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -530,7 +530,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "16ab329c-f3b0-46c3-8ffe-81f58924b94a",
+            "RevisionId": "0883c0e0-77cf-48ca-b8d3-359c954d0090",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:xmltodict:1",
