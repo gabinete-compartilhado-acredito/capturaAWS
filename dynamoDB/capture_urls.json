@@ -321,6 +321,31 @@
  {
   "parameters": [
    {
+    "query_config": {
+     "date_format": "%d/%m/%Y %H:%i:%s",
+     "date_format1": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('day',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format1)s'), '%(date_format1)s')) < 15"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "semi-historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/proposicoes-live/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/%(id)s",
+  "headers": {},
+  "name": "camara-proposicoes-live",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
     "name": "id",
     "body": {
      "from": 1991,
