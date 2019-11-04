@@ -1,0 +1,27 @@
+{
+  "bucket": "brutos-publicos",
+  "capture_type": "live",
+  "data_path": [
+    "dados"
+  ],
+  "data_type": "json",
+  "headers": {
+
+  },
+  "key": "legislativo/camara/v2/tramitacoes/",
+  "name": "camara-tramitacoes",
+  "parameters": [
+    {
+      "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('minute',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format1)s'), '%(date_format1)s')) < 60",
+      "query_config": {
+        "date_format": "%d/%m/%Y %H:%i:%s",
+        "date_format1": "%Y-%m-%d %H:%i:%s"
+      },
+      "type": "athena_query",
+      "url_params": [
+        "id"
+      ]
+    }
+  ],
+  "url": "https://dadosabertos.camara.leg.br/api/v2/proposicoes/%(id)s/tramitacoes"
+}

@@ -128,16 +128,18 @@ def filter_values(data):
             
     return final
 
+
 def get_data(article):
     """
     Get relevant data from html. It recursevely gets leaf text from html
     and saves theirs classes as keys. 
+    It also creates an item in dict's key 'full-text' with all text 
+    in the html, without tags.
     
     input: 
         article: lxml.html.HtmlElement
     return: dict
     """
-
     data = recurse_over_nodes(article, None, {})
 
     # filtra None e melhora keys
@@ -148,7 +150,16 @@ def get_data(article):
     # encoding para utf-8
     data = decode(data)
     
+    # Include full-text:
+    try:
+        full_text = html.tostring(article, method='text', encoding='iso-8859-1').decode('utf-8')
+        full_text = ' '.join(full_text.split())
+    except UnicodeDecodeError:
+        full_text = None
+    data['fulltext'] = full_text
+    
     return data
+
 
 def get_url_certificado(article):
     """

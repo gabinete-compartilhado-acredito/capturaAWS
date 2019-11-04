@@ -95,6 +95,34 @@
  {
   "parameters": [
    {
+    "params": {
+     "end_date": "2019-05-10",
+     "debug": false,
+     "timedelta": -1,
+     "date_format": "%Y-%m-%d",
+     "save_articles": true,
+     "secao": [
+      1,
+      2,
+      3,
+      "e"
+     ],
+     "post_articles": false
+    },
+    "type": "external_module"
+   }
+  ],
+  "data_path": [],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "executivo/federal/dou/",
+  "headers": {},
+  "name": "executivo-federal-dou",
+  "data_type": "external_module"
+ },
+ {
+  "parameters": [
+   {
     "query_config": {},
     "url_params": [
      "id"
@@ -130,7 +158,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('minute', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format)s'), '%(date_format)s')) < 60"
+    "query": "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('minute', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format)s'), '%(date_format)s')) < 60"
    }
   ],
   "data_path": [
@@ -138,6 +166,36 @@
    "Materia"
   ],
   "capture_type": "live",
+  "bucket": "brutos-publicos",
+  "exclude_keys": [
+   "AtualizacoesRecentes"
+  ],
+  "key": "legislativo/senado/v1/proposicoes/",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/%(id)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-proposicoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('day', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format)s'), '%(date_format)s')) < 15"
+   }
+  ],
+  "data_path": [
+   "DetalheMateria",
+   "Materia"
+  ],
+  "capture_type": "semi-historical",
   "bucket": "brutos-publicos",
   "exclude_keys": [
    "AtualizacoesRecentes"
@@ -246,7 +304,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('minute',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format1)s'), '%(date_format1)s')) < 60"
+    "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('minute',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format1)s'), '%(date_format1)s')) < 60"
    }
   ],
   "data_path": [
@@ -417,7 +475,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('minute',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format1)s'), '%(date_format1)s')) < 60"
+    "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('minute',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format1)s'), '%(date_format1)s')) < 60"
    }
   ],
   "data_path": [
@@ -442,7 +500,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('day',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format1)s'), '%(date_format1)s')) < 7"
+    "query": "SELECT DISTINCT codproposicao FROM camara_v1.proposicoes_tramitadas_periodo WHERE  date_diff('day',  date_parse(dataalteracao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format1)s'), '%(date_format1)s')) < 15"
    }
   ],
   "data_path": [
@@ -948,7 +1006,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('minute', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'America/Sao_Paulo', '%(date_format)s'), '%(date_format)s')) < 60"
+    "query": "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('minute', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format)s'), '%(date_format)s')) < 60"
    }
   ],
   "data_path": [
@@ -958,6 +1016,35 @@
    "Tramitacao"
   ],
   "capture_type": "live",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/v1/tramitacoes/",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/movimentacoes/%(id)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-tramitacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('day', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format)s'), '%(date_format)s')) < 15"
+   }
+  ],
+  "data_path": [
+   "MovimentacaoMateria",
+   "Materia",
+   "Tramitacoes",
+   "Tramitacao"
+  ],
+  "capture_type": "semi-historical",
   "bucket": "brutos-publicos",
   "key": "legislativo/senado/v1/tramitacoes/",
   "url": "http://legis.senado.leg.br/dadosabertos/materia/movimentacoes/%(id)s",

@@ -7,6 +7,8 @@ from bigquery_schema_generator.generate_schema import SchemaGenerator
 
 # For debugging:
 debug = False
+# Option from where to get data for schema:
+read_from_aws = False
 
 # Get authentication key for google cloud:
 client = boto3.client('s3')
@@ -64,7 +66,34 @@ def add_bigquery(table_name, table_path, dataset_name, schema):
     print('Table Cr')
 
 
-def save_raw_data_to_local(bucket, prefix):
+def save_raw_data_to_local_GCP(bucket, prefix):
+    """
+    Save the first 100 entries in the database to a temp file
+    RAW_DATA to use it to build a schema for the data. 
+    The data is loaded from Google Storage's bucket and prefix.
+    """
+
+    print(bucket, prefix)
+    
+    # Open temp file and save the first 100 items in it:
+    open(RAW_DATA, 'w').write('')
+    
+    b = storage.get_bucket(bucket)
+    blob_iterator = b.list_blobs(prefix=prefix)  
+    for i, obj in enumerate(blob_iterator):
+        if i > 100:
+            print('breaking')
+            break
+    
+        if debug:
+            print(obj)
+        
+        a = obj.download_as_string().decode('utf-8')
+        open(RAW_DATA, 'a+').write(a + '\n')
+        # DEBUG:
+        #return a
+
+def save_raw_data_to_local_AWS(bucket, prefix):
     """
     Save the first 100 entries in the database to a temp file
     RAW_DATA to use it to build a schema for the data. 
@@ -75,8 +104,7 @@ def save_raw_data_to_local(bucket, prefix):
     # Open temp file and save the first 100 items in it:
     open(RAW_DATA, 'w').write('')
     # print(client.list_objects_v2(Bucket=bucket,Prefix=prefix))
-    for i, obj in enumerate(client.list_objects_v2(Bucket=bucket,
-                                                  Prefix=prefix)['Contents']):
+    for i, obj in enumerate(client.list_objects_v2(Bucket=bucket, Prefix=prefix)['Contents']):
         if i > 100:
             print('breaking')
             break
@@ -86,6 +114,19 @@ def save_raw_data_to_local(bucket, prefix):
         
         a = client.get_object(Bucket=bucket, Key=obj['Key'])['Body'].read().decode()
         open(RAW_DATA, 'a+').write(a + '\n')
+        # DEBUG:
+        #return a
+
+def save_raw_data_to_local(bucket, prefix):
+    """
+    Depending of global boolean variable 'read_from_aws', use data 
+    stored in AWS to build the schema. Otherwise, use data stored 
+    in Google storage.
+    """
+    if read_from_aws == True:
+        save_raw_data_to_local_AWS(bucket, prefix)
+    else:
+        save_raw_data_to_local_GCP(bucket, prefix)
 
 
 def generate_schema(replace_time_types=True, extra_types=[]):
@@ -116,7 +157,9 @@ def lambda_handler(event, context):
     
     # Pre-save first few data entries to a tempo file to create the schema afterwards:
     save_raw_data_to_local(event['bucket_name'], event['prefix'])
+    
     # Create the schema:
     schema = generate_schema(extra_types=event['extra_types'])
+
     # Add to bigquery:
     add_bigquery(event['name'], event['path'], event['dataset_name'], schema)
