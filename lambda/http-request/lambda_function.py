@@ -201,11 +201,15 @@ def write_to_s3(event, response):
     body = '\n'.join(result)
     
     # Salva no S3 os jsons:
+    if debug:
+        print('Putting object in S3 bucket...')
     client = boto3.client('s3')
     s3_log = client.put_object(
                   Body=body,
                   Bucket=event['bucket'], 
                   Key=event['key'])
+    if debug:
+        print('s3_log:', s3_log)
     
     return s3_log['ResponseMetadata']['HTTPStatusCode']
 
@@ -284,7 +288,7 @@ def get_and_save(params, event):
         # (também registra o destino do arquivo)
         status_code_s3 = write_to_s3(event, response)
         if debug:
-            print(status_code_s3)
+            print('write_to_s3 status code:', status_code_s3)
 
         # Copy the result to GCP storage:
         copy_s3_to_storage_gcp(params['order'], event['bucket'], event['key'])

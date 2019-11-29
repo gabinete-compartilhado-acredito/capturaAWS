@@ -219,8 +219,8 @@
             "Description": "",
             "Timeout": 900,
             "MemorySize": 128,
-            "LastModified": "2019-09-30T18:46:02.756+0000",
-            "CodeSha256": "wr5h3sLBFK1KTKUO1jSeVAkUGm6kGAq8uAX5ZSdqkqk=",
+            "LastModified": "2019-11-29T20:43:27.689+0000",
+            "CodeSha256": "+ZXSmbHOmnEZmvP15U/MS6lyc1fH0lazKIc1bjbbE1A=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -230,7 +230,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "e3934577-0ef7-4da6-b3c2-6d780bf21fb0",
+            "RevisionId": "6f62f2d9-3e99-47dd-bb81-5c9e8294cf97",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
@@ -515,12 +515,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 9162,
+            "CodeSize": 9197,
             "Description": "",
             "Timeout": 900,
-            "MemorySize": 448,
-            "LastModified": "2019-11-04T19:04:52.457+0000",
-            "CodeSha256": "AK0iZ34WW2jtY93Tsf7XKhirozP8IZCXfUkfdArjYiU=",
+            "MemorySize": 640,
+            "LastModified": "2019-11-29T20:41:47.099+0000",
+            "CodeSha256": "Jkw35Y5VCZ4an8qai0aMmJCYOwMdJWWnZoYCsUv+OpE=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -530,7 +530,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "0883c0e0-77cf-48ca-b8d3-359c954d0090",
+            "RevisionId": "84702452-bc16-4796-bc2c-ed64e520a802",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:xmltodict:1",

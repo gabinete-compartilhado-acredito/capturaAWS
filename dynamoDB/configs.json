@@ -4,7 +4,7 @@
   "timedelta": 0,
   "date_format": "%Y-%m-%d",
   "last_extra": 0,
-  "end_date": "2019-11-04",
+  "end_date": "2019-11-29",
   "storage_path": "not required",
   "secao_all": [
    1,
@@ -12,6 +12,8 @@
    "e"
   ],
   "secao": [
+   "1",
+   "2",
    "e"
   ],
   "post_articles": true,

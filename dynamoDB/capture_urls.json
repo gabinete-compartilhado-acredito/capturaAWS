@@ -96,9 +96,9 @@
   "parameters": [
    {
     "params": {
-     "end_date": "2019-05-10",
+     "end_date": "2019-04-30",
      "debug": false,
-     "timedelta": -1,
+     "timedelta": -2,
      "date_format": "%Y-%m-%d",
      "save_articles": true,
      "secao": [
@@ -944,6 +944,37 @@
   "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoes/json/proposicoes-%(id)s.json",
   "headers": {},
   "name": "camara-proposicoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senadores"
+   }
+  ],
+  "data_path": [
+   "MateriasRelatoriaParlamentar",
+   "Parlamentar",
+   "Relatorias",
+   "Relatoria"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "dependence": {
+   "name": "senado-senadores",
+   "wait": 1
+  },
+  "key": "legislativo/senado/v1/senador-relatorias/",
+  "url": "http://legis.senado.leg.br/dadosabertos/senador/%(id)s/relatorias",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-senador-relatorias",
   "data_type": "json"
  },
  {
