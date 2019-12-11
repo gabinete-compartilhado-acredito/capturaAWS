@@ -346,12 +346,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 1482,
+            "CodeSize": 1714,
             "Description": "",
             "Timeout": 3,
             "MemorySize": 128,
-            "LastModified": "2019-05-29T19:49:36.116+0000",
-            "CodeSha256": "A0eqeKtuMluUEAKo+TSrRmGqmuzEeSdiP8pOEVMzc4Y=",
+            "LastModified": "2019-12-10T13:37:39.598+0000",
+            "CodeSha256": "e2MuueK2PNkRMIf4CV+oaMaH7dtaD1pXnsjQhGz568s=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -361,7 +361,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "fa488dad-2c88-4209-a7c0-995ef88d5ef7",
+            "RevisionId": "6b81a8b8-3927-4faa-9924-a56857873812",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:slackclient:1",

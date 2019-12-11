@@ -10,9 +10,9 @@
         {
             "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:post-to-slack:JustLambda",
             "Name": "JustLambda",
-            "FunctionVersion": "5",
+            "FunctionVersion": "6",
             "Description": "Production version",
-            "RevisionId": "95717228-66b9-4c34-a579-866b33e10509"
+            "RevisionId": "a7fb089a-8142-4246-b540-cd1170843114"
         }
     ]
 }

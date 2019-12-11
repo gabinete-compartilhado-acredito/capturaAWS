@@ -95,19 +95,21 @@ def lambda_handler(event, context):
         
     event.update({'fields': fields})
     
-    # Username and password for Slack:
-    with open('slack_token.pass', 'r') as token_file:
-        slack_token = token_file.read()
-    sc = SlackClient(slack_token)
-    
-    res = sc.api_call(
-      "chat.postMessage",
-      channel=event['media']['channel'],
-      blocks=blocks % event
-    )
-    
-    if not res['ok']:
-        print('Call to Slack post message failed!')
-        print(res)
-        print(event)
+    for token_filename in ['slack_token.pass', 'monitoracredito_token.pass']:
+        # Username and password for Slack:
+        with open(token_filename, 'r') as token_file:
+            slack_token = token_file.read()
+        sc = SlackClient(slack_token)
+        
+        res = sc.api_call(
+          "chat.postMessage",
+          channel=event['media']['channel'],
+          blocks=blocks % event
+        )
+        
+        if not res['ok']:
+            print('Call to Slack post message failed!')
+            print(token_filename)
+            print(res)
+            print(event)
     
