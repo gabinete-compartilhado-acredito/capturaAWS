@@ -239,13 +239,13 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados WHERE idlegislaturafinal = 56"
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados"
    }
   ],
   "data_path": [
    "dados"
   ],
-  "capture_type": "daily",
+  "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-despesas/",
   "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/despesas?itens=100",
@@ -261,13 +261,13 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados"
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados WHERE idlegislaturafinal = 56"
    }
   ],
   "data_path": [
    "dados"
   ],
-  "capture_type": "historical",
+  "capture_type": "off_daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-despesas/",
   "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/despesas?itens=100",
@@ -977,7 +977,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senadores"
+    "query": "SELECT identificacaoparlamentar.codigoparlamentar AS id FROM senado.senadores WHERE CAST(mandatos.mandato.primeiralegislaturadomandato.numerolegislatura AS INTEGER) = 56 OR CAST(mandatos.mandato.segundalegislaturadomandato.numerolegislatura AS INTEGER) = 56"
    }
   ],
   "data_path": [
@@ -1470,7 +1470,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT identificacaoparlamentar.codigoparlamentar as id FROM senado.senadores"
+    "query": "SELECT identificacaoparlamentar.codigoparlamentar AS id FROM senado.senadores WHERE CAST(mandatos.mandato.primeiralegislaturadomandato.numerolegislatura AS INTEGER) = 56 OR CAST(mandatos.mandato.segundalegislaturadomandato.numerolegislatura AS INTEGER) = 56"
    }
   ],
   "data_path": [
