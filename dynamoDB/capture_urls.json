@@ -128,6 +128,29 @@
      "id"
     ],
     "type": "athena_query",
+    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados"
+   }
+  ],
+  "data_path": [
+   "Deputados",
+   "Deputado"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v1/deputados-detalhes/",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Deputados.asmx/ObterDetalhesDeputado?ideCadastro=%(id)s&numLegislatura=",
+  "headers": {},
+  "name": "camara-deputados-detalhes-v1",
+  "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
     "query": "WITH d AS (SELECT distinct identificacaomateria.codigomateria as id FROM senado.proposicoes_lista) SELECT id FROM d WHERE id NOT IN (SELECT distinct identificacaomateria.codigomateria FROM senado.proposicoes)"
    }
   ],
