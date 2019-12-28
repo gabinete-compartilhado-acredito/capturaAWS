@@ -758,6 +758,28 @@
    }
   ],
   "data_path": [
+   "ListaParlamentarEmExercicio",
+   "Parlamentares",
+   "Parlamentar"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "dependence": null,
+  "key": "legislativo/senado/v1/senador-lista-atual/",
+  "url": "http://legis.senado.leg.br/dadosabertos/senador/lista/atual",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-lista-atual",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "type": "empty"
+   }
+  ],
+  "data_path": [
    "proposicoes",
    "proposicao"
   ],
