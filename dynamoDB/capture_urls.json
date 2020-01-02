@@ -999,7 +999,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT identificacaoparlamentar.codigoparlamentar AS id FROM senado.senadores WHERE CAST(mandatos.mandato.primeiralegislaturadomandato.numerolegislatura AS INTEGER) = 56 OR CAST(mandatos.mandato.segundalegislaturadomandato.numerolegislatura AS INTEGER) = 56"
+    "query": "SELECT IdentificacaoParlamentar.CodigoParlamentar AS id FROM senado.senador_lista_atual"
    }
   ],
   "data_path": [
@@ -1492,7 +1492,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT identificacaoparlamentar.codigoparlamentar AS id FROM senado.senadores WHERE CAST(mandatos.mandato.primeiralegislaturadomandato.numerolegislatura AS INTEGER) = 56 OR CAST(mandatos.mandato.segundalegislaturadomandato.numerolegislatura AS INTEGER) = 56"
+    "query": "SELECT IdentificacaoParlamentar.CodigoParlamentar AS id FROM senado.senador_lista_atual"
    }
   ],
   "data_path": [
