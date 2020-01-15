@@ -10,9 +10,9 @@
         {
             "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:write-to-storage-gcp:JustLambda",
             "Name": "JustLambda",
-            "FunctionVersion": "4",
+            "FunctionVersion": "5",
             "Description": "step function independent",
-            "RevisionId": "b171a27a-2230-4045-8b31-0d84c02b9267"
+            "RevisionId": "e3e31e71-0bd4-44e8-9dc6-d7ab8c734a85"
         },
         {
             "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:write-to-storage-gcp:PROD",

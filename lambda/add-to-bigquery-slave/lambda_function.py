@@ -5,6 +5,8 @@ import boto3
 import os
 from bigquery_schema_generator.generate_schema import SchemaGenerator
 
+# To run locally (not in AWS):
+local = False
 # For debugging:
 debug = False
 # Option from where to get data for schema:
@@ -16,6 +18,9 @@ a = client.get_object(
                   Bucket='config-lambda', 
                   Key='layers/google-cloud-storage/gabinete-compartilhado.json')
 open('/tmp/key.json', 'w').write(a['Body'].read().decode('utf-8'))
+
+if local:
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/tmp/key.json'
 
 # Start clients for google cloud services:
 bq = bigquery.Client(project='gabinete-compartilhado')
@@ -89,7 +94,8 @@ def save_raw_data_to_local_GCP(bucket, prefix):
             print(obj)
         
         a = obj.download_as_string().decode('utf-8')
-        open(RAW_DATA, 'a+').write(a + '\n')
+        if len(a) > 0:
+            open(RAW_DATA, 'a+').write(a + '\n')
         # DEBUG:
         #return a
 

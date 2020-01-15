@@ -427,6 +427,42 @@
  {
   "parameters": [
    {
+    "query_config": {
+     "date_format": "%d/%m/%Y",
+     "date_format1": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "siglatipo",
+     "numero",
+     "ano"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT siglatipo, numero, ano FROM camara_v1.proposicoes_votadas_plenario AS t1 JOIN camara_v2.proposicoes AS t2 ON t2.id = CAST(t1.codproposicao AS INTEGER)"
+   }
+  ],
+  "data_path": [
+   "proposicao",
+   "Votacoes",
+   "Votacao"
+  ],
+  "capture_type": "historical",
+  "records_keys": [
+   "votos",
+   "Deputado"
+  ],
+  "bucket": "brutos-publicos",
+  "exclude_keys": [
+   "orientacaoBancada"
+  ],
+  "key": "legislativo/camara/v1/proposicao-votacao-deputado/",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=%(siglatipo)s&numero=%(numero)s&ano=%(ano)s",
+  "headers": {},
+  "name": "camara-proposicao-votacao-deputado",
+  "data_type": "xml"
+ },
+ {
+  "parameters": [
+   {
     "name": "id",
     "body": {
      "from": 1991,

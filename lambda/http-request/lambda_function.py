@@ -360,7 +360,8 @@ def call_next_step(params):
         # call next lambda
         params['order'] = params['order'] - 1
         
-        print('Calling order: ', params['order'])   
+        if debug:
+            print('Calling order: ', params['order'])   
         
         # Call this same function again, but with lower order: 
         lambd.invoke(
