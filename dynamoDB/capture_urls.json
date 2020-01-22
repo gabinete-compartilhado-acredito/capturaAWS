@@ -372,7 +372,7 @@
     "name": "id",
     "body": {
      "from": 1991,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -466,7 +466,7 @@
     "name": "id",
     "body": {
      "from": 1991,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -669,7 +669,7 @@
     "name": "id",
     "body": {
      "from": 2019,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -691,7 +691,7 @@
     "name": "id",
     "body": {
      "from": 1988,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -713,7 +713,7 @@
     "name": "id",
     "body": {
      "from": 1991,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -822,7 +822,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v1/proposicoes-votadas-plenario/",
-  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2019&tipo=",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2020&tipo=",
   "headers": {},
   "name": "camara-proposicoes-votadas-plenario",
   "data_type": "xml"
@@ -833,7 +833,7 @@
     "name": "id",
     "body": {
      "from": 1991,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -989,7 +989,7 @@
     "name": "id",
     "body": {
      "from": 2019,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -1011,7 +1011,7 @@
     "name": "id",
     "body": {
      "from": 1988,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -1095,7 +1095,7 @@
     "name": "id",
     "body": {
      "from": 2019,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -1117,7 +1117,7 @@
     "name": "id",
     "body": {
      "from": 1988,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -1349,7 +1349,7 @@
     "name": "year",
     "body": {
      "from": 2019,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -1379,7 +1379,7 @@
     "name": "year",
     "body": {
      "from": 1988,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }
@@ -1464,7 +1464,7 @@
     "name": "year",
     "body": {
      "from": 1988,
-     "to": 2019
+     "to": 2020
     },
     "type": "from_to"
    }

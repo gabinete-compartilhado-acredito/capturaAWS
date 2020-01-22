@@ -18,14 +18,7 @@ a = client.get_object(
                   Bucket='config-lambda', 
                   Key='layers/google-cloud-storage/gabinete-compartilhado.json')
 open('/tmp/key.json', 'w').write(a['Body'].read().decode('utf-8'))
-
-if local:
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/tmp/key.json'
-
-# Start clients for google cloud services:
-bq = bigquery.Client(project='gabinete-compartilhado')
-storage = storage.Client(project='gabinete-compartilhado')
-
+    
 # Temp files to create schema:
 RAW_DATA = '/tmp/raw.json'
 SCHEMA =   '/tmp/schema.json'
@@ -37,6 +30,10 @@ def add_bigquery(table_name, table_path, dataset_name, schema):
     a table in bigquery with schema given in 'schema' and 
     the data stored in Google Storage path 'table_path'.
     """
+
+    if local:
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/tmp/key.json'
+    bq = bigquery.Client(project='gabinete-compartilhado')
     
     ds = bq.dataset(dataset_name)
     
@@ -82,8 +79,12 @@ def save_raw_data_to_local_GCP(bucket, prefix):
     
     # Open temp file and save the first 100 items in it:
     open(RAW_DATA, 'w').write('')
-    
-    b = storage.get_bucket(bucket)
+
+    if local:
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/tmp/key.json'
+    gcp_storage = storage.Client(project='gabinete-compartilhado')
+
+    b = gcp_storage.get_bucket(bucket)
     blob_iterator = b.list_blobs(prefix=prefix)  
     for i, obj in enumerate(blob_iterator):
         if i > 100:
