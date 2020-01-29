@@ -485,12 +485,7 @@
  {
   "parameters": [
    {
-    "query_config": {},
-    "url_params": [
-     "id"
-    ],
-    "type": "athena_query",
-    "query": "SELECT idlegislatura as id FROM camara_v2.legislaturas;"
+    "type": "empty"
    }
   ],
   "data_path": [
@@ -499,7 +494,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputado-mesa/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/legislaturas/%(id)s",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/legislaturas/56",
   "headers": {},
   "name": "camara-deputados-mesa",
   "data_type": "json"
@@ -512,7 +507,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT split(uri, '/')[7] FROM camara_v2.deputados"
+    "query": "SELECT idlegislatura as id FROM camara_v2.legislaturas"
    }
   ],
   "data_path": [
