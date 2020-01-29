@@ -615,7 +615,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-discursos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/discursos?itens=100",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/discursos?idLegislatura=51&idLegislatura=52&idLegislatura=53&idLegislatura=54&idLegislatura=55&idLegislatura=56&ordenarPor=dataHoraInicio&ordem=ASC&itens=100",
   "headers": {},
   "name": "camara-deputados-discursos",
   "data_type": "json"
@@ -637,7 +637,7 @@
   "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-discursos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/discursos?itens=100",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/discursos?idLegislatura=51&idLegislatura=52&idLegislatura=53&idLegislatura=54&idLegislatura=55&idLegislatura=56&ordenarPor=dataHoraInicio&ordem=ASC&itens=100",
   "headers": {},
   "name": "camara-deputados-discursos",
   "data_type": "json"
@@ -932,7 +932,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-orgaos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/orgaos?itens=100",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/orgaos?dataInicio=1991-02-01&itens=100&ordem=ASC&ordenarPor=dataInicio",
   "headers": {},
   "name": "camara-deputados-orgaos",
   "data_type": "json"
@@ -954,7 +954,7 @@
   "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-orgaos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/orgaos?itens=100",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/orgaos?dataInicio=1991-02-01&itens=100&ordem=ASC&ordenarPor=dataInicio",
   "headers": {},
   "name": "camara-deputados-orgaos",
   "data_type": "json"
