@@ -7,11 +7,81 @@ import time
 import json
 import random
 import sys
+import google.auth
+from google.cloud import bigquery
+import os
 sys.path.insert(0, "external_modules")
 import importlib
 
 # Switch for printing messages to log:
-debug = True
+debug = False
+# Wheter this code is ran locally or on AWS:
+local = False
+
+
+def query_bigquery(query):
+    """
+    Runs a `query` (str) on Google BigQuery and returns the results as
+    a list of dictionaries.
+    """
+    
+    if local:
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/tmp/key.json'
+    
+    # Get key for accessing BigQuery:
+    s3 = boto3.client('s3')
+    a  = s3.get_object(
+                  Bucket='config-lambda', 
+                  Key='layers/google-cloud-storage/gabinete-compartilhado.json')
+    open('/tmp/key.json', 'w').write(a['Body'].read().decode('utf-8'))
+
+    # Create credentials with Drive & BigQuery API scopes
+    # Both APIs must be enabled for your project before running this code
+    credentials, project = google.auth.default(scopes=[
+        'https://www.googleapis.com/auth/drive',
+        'https://www.googleapis.com/auth/bigquery',
+    ])
+    bq = bigquery.Client(credentials=credentials, project=project)
+        
+    result = bq.query(
+        query,
+        # Location must match that of the dataset(s) referenced in the query.
+        location="US",
+    )  # API request - starts the query
+    
+    result = [dict(r.items()) for r in result] 
+    
+    return result
+
+
+def forms_bigquery(par, item, forms):
+    """
+    Faz um query no Google BigQuery e usa os resultados para 
+    construir uma lista de URLs e filenames (destino).
+    """
+       
+    # Substitui parâmetros de input na query:
+    query = par['query'] % par['query_config']
+    
+    # Executa a query:
+    data = query_bigquery(query)
+        
+    # LOOP sobre as linhas do retorno do SQL:
+    for d in data:
+
+        if len(d) > 1:
+            end_filename = '&'.join(map(lambda x: '='.join(map(str, x)),
+                                                  zip(par['url_params'], 
+                                                      list(d.values()))))
+        else:
+            end_filename = d.values()[0]
+
+        forms.append({'url': item['url'] % dict(zip(par['url_params'], list(d.values()))),
+                      'filename': '_'.join(map(str, [item['name'], end_filename])) + '.json'
+                      })
+    
+    return forms
+
 
 def forms_athena_query(par, item, forms):
     """
@@ -77,6 +147,7 @@ def forms_from_to(par, item, forms):
                       })
     
     return forms
+   
     
 def forms_from_external_list(par, item, forms, event):
     
@@ -149,6 +220,7 @@ def forms_date_start_end(par, item, forms):
     
     return forms
 
+
 def forms_external_module(par, item, forms):
     
     em = importlib.import_module(item['name'].replace('-', '_'))
@@ -183,6 +255,9 @@ def generate_forms(item, event):
         elif par['type'] == 'athena_query':
 
             forms = forms_athena_query(par, item, forms)
+        
+        elif par['type'] == 'bigquery':
+            forms = forms_bigquery(par, item, forms)
             
         elif par['type'] == 'external_list':
             
@@ -202,7 +277,8 @@ def generate_forms(item, event):
             raise 'Parameter type not identified'
             
     return forms 
-
+    
+    
 def generate_body(response, event):
     """
     Gera as URLs a partir de informações em arquivo 'response' do dynamo,
@@ -297,6 +373,7 @@ def lambda_handler(event, context):
     Cria lista de de URLs para baixar, e depois chama o lambd.invoke que 
     efetivamente baixa o conteúdo dos URLs.
     
+    # Exemplo de input em `event`:
     {
       "table_name": "capture_urls",
       "key": {
@@ -313,14 +390,14 @@ def lambda_handler(event, context):
     print("Starting parametrize-API-requests with event:")
     print(event)
     
-    # Cria cliente do dynamo
+    # Cria cliente do dynamo:
     client = boto3.client('dynamodb')
     
     # Seleciona um arquivo do dynamo:
     response = client.get_item(TableName=event['table_name'], 
                                 Key=event['key'])
     
-    # Lê o arquivo do dynamo:
+    # Lê o arquivo do dynamo (retorna uma lista de dicionários ou um dicionário):
     response = dyjson.loads(response)
     if debug == True:
         print("dict of dynamo Table:") 

@@ -215,22 +215,27 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 5457,
+            "CodeSize": 6397,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 128,
-            "LastModified": "2019-11-29T20:43:27.689+0000",
-            "CodeSha256": "+ZXSmbHOmnEZmvP15U/MS6lyc1fH0lazKIc1bjbbE1A=",
+            "LastModified": "2020-02-14T18:45:23.981+0000",
+            "CodeSha256": "bgYe+E79H5qA/S+atDMeCtdPRRBNNYmQoiSEinby1w4=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
                 "SecurityGroupIds": [],
                 "VpcId": ""
             },
+            "Environment": {
+                "Variables": {
+                    "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/key.json"
+                }
+            },
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "6f62f2d9-3e99-47dd-bb81-5c9e8294cf97",
+            "RevisionId": "923b99fd-125c-4db4-b9f0-113bb9129115",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
@@ -241,16 +246,16 @@
                     "CodeSize": 9428148
                 },
                 {
-                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:xmltodict:1",
-                    "CodeSize": 16999
-                },
-                {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:requests:1",
                     "CodeSize": 904176
                 },
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:lxml:1",
                     "CodeSize": 5787930
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:google-cloud-bigquery:1",
+                    "CodeSize": 5595732
                 }
             ]
         },
