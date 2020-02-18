@@ -368,6 +368,21 @@ def create_and_populate_dynamodb_table(urls, event):
     return {'dynamo_table_name': table_name, 'order': len(urls) - 1}
 
 
+def adapt_url_key(body_entry):
+    """
+    Rename the `body_entry` dict key 'url' to 'identifier' 
+    if its value does not start with 'http' or 'ftp'.
+    
+    PS: It changes the content of the input dict `body_entry`.
+    """
+    
+    adapted = body_entry
+    if body_entry['url'][:4] != 'http' and body_entry['url'][:3] != 'ftp':
+        body_entry['identifier'] = body_entry.pop('url')
+    
+    return body_entry
+    
+
 def lambda_handler(event, context):
     """
     Cria lista de de URLs para baixar, e depois chama o lambd.invoke que 
@@ -405,6 +420,8 @@ def lambda_handler(event, context):
     
     # Gera as URLs e os filenames (destino):
     body = generate_body(response, event)
+    # Rename 'url' key if it is not an url:
+    body = [adapt_url_key(b) for b in body]
     
     # Salva os as informações geradas acima no dynamo como uma tabela temp:
     params = create_and_populate_dynamodb_table(body, event)

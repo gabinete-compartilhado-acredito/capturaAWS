@@ -215,12 +215,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 6397,
+            "CodeSize": 6576,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 128,
-            "LastModified": "2020-02-14T18:45:23.981+0000",
-            "CodeSha256": "bgYe+E79H5qA/S+atDMeCtdPRRBNNYmQoiSEinby1w4=",
+            "LastModified": "2020-02-17T13:52:41.013+0000",
+            "CodeSha256": "OHulNyGAuQidELg5IMo+Oc232HgCfg/tbPLqmET2PPU=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -235,7 +235,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "923b99fd-125c-4db4-b9f0-113bb9129115",
+            "RevisionId": "6251047b-61a0-4483-a836-7343ed98845a",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
