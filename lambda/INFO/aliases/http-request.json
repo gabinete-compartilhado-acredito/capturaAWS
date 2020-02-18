@@ -10,9 +10,9 @@
         {
             "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:http-request:JustLambda",
             "Name": "JustLambda",
-            "FunctionVersion": "37",
+            "FunctionVersion": "38",
             "Description": "step function independent",
-            "RevisionId": "f6f6f72c-e8ca-4f77-9920-69852e374672"
+            "RevisionId": "c038e6bc-2d39-4d11-ae39-5843d5cc5848"
         },
         {
             "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:http-request:PROD",

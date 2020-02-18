@@ -1,5 +1,4 @@
 import json
-#from botocore.vendored import requests
 import requests
 import boto3
 import xmltodict
@@ -13,6 +12,9 @@ import importlib
 
 # For debugging:
 debug = False
+# To run it locally:
+local = False
+
 
 def get_nested_dict(data, keys):
 
@@ -30,12 +32,17 @@ def add_url_and_capture_date(in_json, event):
         in_json = [in_json]
         
     for record in in_json:
+        if 'url' in event:
+            api_url = event['url']
+        else:
+            api_url = None
         record.update({
-            'api_url': event['url'],
+            'api_url': api_url,
             'capture_date': datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         })
     
     return in_json
+
 
 def delete_keys_from_dict(dictionary, event):
 
@@ -58,7 +65,8 @@ def delete_keys_from_dict(dictionary, event):
     keys_set = set(keys)  
     
     return internal_func(dictionary, keys_set)
-    
+
+
 def preserve_root_data(dictionaries, event):
     
     def internal_func(dictionary, event):
@@ -94,25 +102,30 @@ def preserve_root_data(dictionaries, event):
     flatten = lambda l: [item for sublist in l for item in sublist]
   
     return flatten(dictionaries), True
-    
+
+
 def postprocessor(path, key, value):
     
     return re.sub(r'[\W_]+', u'', key, flags=re.UNICODE), value
-  
+
+
 def load_as_json(event, response):
     """
     Se esperamos um json na response (a espera é especificada 
     no event), retorna o json; se for xml, converte para dicionário.
     """
+    
     if event['data_type'] == 'json':
-
         data = response.json()
 
     elif event['data_type'] == 'xml':
-
         data = xmltodict.parse(response.text, postprocessor=postprocessor)
+    # Resposta padrão: dicionário vazio.
+    else:
+        data = {}
     
     return data
+
 
 def filter_data(event, data):
     """
@@ -136,6 +149,7 @@ def filter_data(event, data):
     
     return in_json, save_to_s3
 
+        
 def response_to_dict_list(event, response):
     """
     Translate the GET response to a list of dictionaries.
@@ -146,7 +160,7 @@ def response_to_dict_list(event, response):
             print ('data_type = external')
         em = importlib.import_module(event['name'].replace('-', '_'))
     
-        in_json = em.entrypoint(response, event['url'])
+        in_json = em.entrypoint(response, event)
         if debug:
             print('len(in_json):', len(in_json))
         save_to_s3 = True
@@ -164,6 +178,7 @@ def response_to_dict_list(event, response):
         in_json, save_to_s3 = filter_data(event, data)
 
     return in_json, save_to_s3
+
 
 def write_to_s3(event, response):
     """
@@ -213,6 +228,7 @@ def write_to_s3(event, response):
     
     return s3_log['ResponseMetadata']['HTTPStatusCode']
 
+
 def load_params(event):
     """
     Pega no dynamo um dicionário especificado pelo order no 
@@ -251,13 +267,15 @@ def copy_s3_to_storage_gcp(order, bucket, key):
     lambd = boto3.client('lambda')
     
     if params['order'] >= 0:
+        if debug:
+            print('Invoking write-to-storage-gcp...')
         # Order lambda to save this result to storage (Google):
         lambd.invoke(
          FunctionName='arn:aws:lambda:us-east-1:085250262607:function:write-to-storage-gcp:JustLambda',
          InvocationType='Event',
          Payload=json.dumps(params))
 
- 
+
 def get_and_save(params, event):
     """
     Input:
@@ -273,17 +291,23 @@ def get_and_save(params, event):
     session.mount('http', requests.adapters.HTTPAdapter(max_retries=3))
     
     # Pega o arquivo especificado pelo url no event:
-    if debug:
-        print('GET file...')
-    response = session.get(event['url'], 
-                           params=event['params'], 
-                           headers=event['headers'], # configs para HTTP GET.
-                           timeout=30)
-
-    # Rodou bem:                       
-    if response.status_code == 200:
+    if 'url' in event.keys():
         if debug:
-            print('GET successful. Writing to S3...')
+            print('GET file...')
+        response = session.get(event['url'], 
+                               params=event['params'], 
+                               headers=event['headers'], # configs para HTTP GET.
+                               timeout=30)
+    else:
+        response = None
+        
+    # Rodou bem ou ainda vai capturar (caso sem url):                       
+    if response == None or (response != None and response.status_code == 200):
+        if debug:
+            if response != None:
+                print('GET successful. Writing to S3...')
+            else:
+                print('Will obtain non-http-get data...')
         # Salva arquivo baixado no S3 (Amazon), além de outras coisas:
         # (também registra o destino do arquivo)
         status_code_s3 = write_to_s3(event, response)
@@ -311,6 +335,10 @@ def get_next_page(event, response):
     - 'key' (the file path where to save the data's next page);
     - 'url' (the address of the data's next page).
     """
+    
+    if debug:
+        print('Checking for pagination in data.')
+    
     # Parse JSON:
     raw_data = load_as_json(event, response)
     
@@ -346,6 +374,9 @@ def call_next_step(params):
     # check if loop is done
     if params['order'] <= 0:
         
+        # debug:
+        #return 0
+        
         if debug:
             print('Deleting DynamoDB')
         
@@ -363,14 +394,17 @@ def call_next_step(params):
         if debug:
             print('Calling order: ', params['order'])   
         
-        # Call this same function again, but with lower order: 
-        lambd.invoke(
-         FunctionName='arn:aws:lambda:us-east-1:085250262607:function:http-request:JustLambda',
-         #FunctionName='arn:aws:lambda:us-east-1:085250262607:function:http-request:DEV',
-         InvocationType='Event',
-         Payload=json.dumps(params))
-    
+        if local:
+            lambda_handler(params, {})
+        else:
+            # Call this same function again, but with lower order: 
+            lambd.invoke(
+             FunctionName='arn:aws:lambda:us-east-1:085250262607:function:http-request:JustLambda',
+             #FunctionName='arn:aws:lambda:us-east-1:085250262607:function:http-request:DEV',
+             InvocationType='Event',
+             Payload=json.dumps(params))    
 
+            
 def lambda_handler(params, context):
     """
     Downloads the files in dynamo's temp table described in config file 
@@ -411,5 +445,5 @@ def lambda_handler(params, context):
         
         # Raise error somewhere, maybe slack
         print(e)
-        
+
     call_next_step(params)

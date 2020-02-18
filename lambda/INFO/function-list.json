@@ -215,12 +215,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 6576,
+            "CodeSize": 6725,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 128,
-            "LastModified": "2020-02-17T13:52:41.013+0000",
-            "CodeSha256": "OHulNyGAuQidELg5IMo+Oc232HgCfg/tbPLqmET2PPU=",
+            "LastModified": "2020-02-18T12:07:03.178+0000",
+            "CodeSha256": "f05fvK3hj5BUipneZZztZMhsMCFyQIWDRm3EOzhc7nc=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -235,7 +235,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "6251047b-61a0-4483-a836-7343ed98845a",
+            "RevisionId": "aee4c5ee-f8bd-43c6-bacc-0b77c162fce7",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
@@ -520,12 +520,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 9196,
+            "CodeSize": 10773,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 640,
-            "LastModified": "2019-12-16T21:41:12.895+0000",
-            "CodeSha256": "JFi8m3bzeoTIdXphxG+P8SiQ+3AY9R1eJqfz28yz9s0=",
+            "LastModified": "2020-02-18T14:35:55.434+0000",
+            "CodeSha256": "Gt5adWe4s26D4RH2ZHq6Rp/7o07SN14sAC1glkaDvjs=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -535,27 +535,23 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "948adcd7-370f-45a6-bbf1-4b6d95d56610",
+            "RevisionId": "7d5b2ebb-8e21-4269-b403-5781f4b28f6f",
             "Layers": [
                 {
-                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:xmltodict:1",
-                    "CodeSize": 16999
-                },
-                {
-                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
-                    "CodeSize": 8301044
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:http-request_Core:1",
+                    "CodeSize": 9519316
                 },
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:lxml:1",
                     "CodeSize": 5787930
                 },
                 {
-                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:requests:1",
-                    "CodeSize": 904176
-                },
-                {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:bs4:2",
                     "CodeSize": 6102554
+                },
+                {
+                    "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:GetOldTweets3:1",
+                    "CodeSize": 5996254
                 }
             ]
         },

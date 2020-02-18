@@ -84,7 +84,9 @@ def structure_remuneracao(remuneracao_dict_list):
     return dict(zip(tags, values))
     
 
-def entrypoint(response, url):
+def entrypoint(response, event):
+    
+    url = event['url']
     
     # Use Beautiful soup to capture comissionado's list:
     soup   = BeautifulSoup(response.content, 'lxml')

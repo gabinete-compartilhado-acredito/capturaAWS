@@ -220,7 +220,9 @@ def structure_data(data, url, article):
     return final
         
 
-def entrypoint(response, url):
+def entrypoint(response, event):
+
+    url = event['url']
 
     article = select_article(response)
     

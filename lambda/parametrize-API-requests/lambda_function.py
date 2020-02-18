@@ -68,17 +68,25 @@ def forms_bigquery(par, item, forms):
         
     # LOOP sobre as linhas do retorno do SQL:
     for d in data:
-
+        
+        # Create data destination filename:
         if len(d) > 1:
-            end_filename = '&'.join(map(lambda x: '='.join(map(str, x)),
-                                                  zip(par['url_params'], 
-                                                      list(d.values()))))
+            end_filename = '&'.join(map(lambda x: '='.join(map(str, x)), zip(par['url_params'], list(d.values()))))
         else:
             end_filename = d.values()[0]
-
-        forms.append({'url': item['url'] % dict(zip(par['url_params'], list(d.values()))),
-                      'filename': '_'.join(map(str, [item['name'], end_filename])) + '.json'
-                      })
+        filename = '_'.join(map(str, [item['name'], end_filename])) + '.json'
+        
+        # Create source url:    
+        url = item['url'] % dict(zip(par['url_params'], list(d.values())))
+        
+        if 'url' in d:
+            raise Exception("'url' key already exists in data; avoiding its redefinition.")
+        if 'filename' in d:
+            raise Exception("'filename' key already exists in data; avoiding its redefinition.")
+        d['url']      = url
+        d['filename'] = filename
+        
+        forms.append(d)
     
     return forms
 
@@ -298,22 +306,24 @@ def generate_body(response, event):
     # Do item vem filename e url, o resto vem do dynamo, basicamente infos 
     # sobre localização dos dados.
     
-        body.append(
-            dict(url=item['url'],
-                 params={},
-                 headers=response['Item']['headers'],
-                 bucket=response['Item']['bucket'],
-                 key=response['Item']['key'] + item['filename'],
-                 data_type=response['Item']['data_type'],
-                 data_path=response['Item']['data_path'],
-                 exclude_keys=response['Item']['exclude_keys'],
-                 records_keys=response['Item']['records_keys'],
-                 name=response['Item']['name']
-                )
-        )
+        request_pars = dict(url=item.pop('url'),
+                            params={},
+                            headers=response['Item']['headers'],
+                            bucket=response['Item']['bucket'],
+                            key=response['Item']['key'] + item.pop('filename'),
+                            data_type=response['Item']['data_type'],
+                            data_path=response['Item']['data_path'],
+                            exclude_keys=response['Item']['exclude_keys'],
+                            records_keys=response['Item']['records_keys'],
+                            name=response['Item']['name']
+                           )
+        request_pars['aux_data'] = item
+    
+        body.append(request_pars)
         
     return body
     
+
 def create_dynamo_temp_table(table_name, dynamodb):
     
     try:
@@ -435,7 +445,7 @@ def lambda_handler(event, context):
     # Faz a caputa efetivamente, com os parâmetros criados por generate_body e 
     # salvos por create_and_populate_dynamodb_table:
     
-    #return 0
+    return 0
     
     lambd.invoke(
         FunctionName='arn:aws:lambda:us-east-1:085250262607:function:http-request:JustLambda',
