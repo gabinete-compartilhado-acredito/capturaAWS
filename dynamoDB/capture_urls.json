@@ -526,6 +526,52 @@
    {
     "query_config": {},
     "url_params": [
+     "id",
+     "data_ini",
+     "data_fim",
+     "twitter"
+    ],
+    "type": "bigquery",
+    "query": "SELECT id, DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) AS data_ini, DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) AS data_fim, perfil_twitter FROM `gabinete-compartilhado.bruto_gabinete_administrativo.perfil_twitter_deputado`"
+   }
+  ],
+  "data_path": [],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/scrapping/twitter/",
+  "url": "%(twitter)s",
+  "headers": {},
+  "name": "camara-deputados-tweets",
+  "data_type": "external_module"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "id",
+     "data_ini",
+     "data_fim",
+     "twitter"
+    ],
+    "type": "bigquery",
+    "query": "SELECT id, '2019-02-01' AS data_ini, '2020-02-26' AS data_fim, perfil_twitter FROM `gabinete-compartilhado.bruto_gabinete_administrativo.perfil_twitter_deputado`"
+   }
+  ],
+  "data_path": [],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/scrapping/twitter/",
+  "url": "%(twitter)s",
+  "headers": {},
+  "name": "camara-deputados-tweets",
+  "data_type": "external_module"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
      "id"
     ],
     "type": "athena_query",

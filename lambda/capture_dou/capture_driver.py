@@ -101,7 +101,7 @@ def capture_DOU_driver(event):
             print("Get article...", counter)
         try:
             get_ok   = False
-            response = session.get(url_file['url'], timeout=5)
+            response = session.get(url_file['url'], timeout=15)
             get_ok   = True      
         # Warn if GET crashes:
         except requests.exceptions.ReadTimeout:

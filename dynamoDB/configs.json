@@ -1,22 +1,24 @@
 [
  {
+  "article_batch_size": 500,
+  "date_format": "%Y-%m-%d",
+  "last_extra": 1,
+  "end_date": "2020-03-06",
+  "secao": [
+   "e"
+  ],
+  "1st_article": 0,
+  "name": "capture_DOU",
+  "save_articles": false,
   "slack_token": "not required",
   "timedelta": 0,
-  "date_format": "%Y-%m-%d",
-  "last_extra": 0,
-  "end_date": "2020-01-29",
   "storage_path": "not required",
   "secao_all": [
    1,
    2,
    "e"
   ],
-  "secao": [
-   "e"
-  ],
   "post_articles": true,
-  "name": "capture_DOU",
-  "save_articles": false,
   "filter_file": "not_required"
  }
 ]
