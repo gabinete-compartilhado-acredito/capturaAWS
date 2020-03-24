@@ -1,0 +1,62 @@
+[
+ {
+  "capture_type": "daily",
+  "output_data": {
+   "bucket": "brutos-publicos",
+   "type": "s3_gcp_file",
+   "cols": [
+    "class"
+   ],
+   "key": "legislativo/camara/python-processed/req-camara-classif/req-camara-classif-%(now)s.json",
+   "key_pars": [
+    "now"
+   ]
+  },
+  "code": {
+   "bucket": "config-lambda",
+   "key": "models/req_classifier_svm_2020-03-17/tested_model.joblib"
+  },
+  "input_data": {
+   "bucket": "config-lambda",
+   "query_cols": [
+    "id",
+    "data_apresentacao",
+    "ementa"
+   ],
+   "type": "athena",
+   "key": "models/req_classifier_svm_2020-03-17/test_data.csv",
+   "query": "SELECT id, dataapresentacao, ementa FROM camara_v2.proposicoes WHERE LOWER(descricaoTipo) LIKE '%requerimento%' AND DATE_PARSE('2019-01-31', '%Y-%m-%d') <= DATE_PARSE(dataapresentacao, '%Y-%m-%dT%H:%i:%s') AND id NOT IN (SELECT id FROM python_processed.req_camara_classif)"
+  },
+  "name": "classify_reqs_camara"
+ },
+ {
+  "capture_type": "historical",
+  "output_data": {
+   "bucket": "brutos-publicos",
+   "type": "s3_gcp_file",
+   "cols": [
+    "class"
+   ],
+   "key": "legislativo/camara/python-processed/req-camara-classif/req-camara-classif-%(now)s.json",
+   "key_pars": [
+    "now"
+   ]
+  },
+  "code": {
+   "bucket": "config-lambda",
+   "key": "models/req_classifier_svm_2020-03-17/tested_model.joblib"
+  },
+  "input_data": {
+   "bucket": "config-lambda",
+   "query_cols": [
+    "id",
+    "data_apresentacao",
+    "ementa"
+   ],
+   "type": "athena",
+   "key": "models/req_classifier_svm_2020-03-17/test_data.csv",
+   "query": "SELECT id, dataapresentacao, ementa FROM camara_v2.proposicoes WHERE LOWER(descricaoTipo) LIKE '%requerimento%' AND DATE_PARSE('2019-01-31', '%Y-%m-%d') <= DATE_PARSE(dataapresentacao, '%Y-%m-%dT%H:%i:%s') AND DATE_PARSE(dataapresentacao, '%Y-%m-%dT%H:%i:%s') < DATE_PARSE('2020-03-22', '%Y-%m-%d')"
+  },
+  "name": "classify_reqs_camara"
+ }
+]

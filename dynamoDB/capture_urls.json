@@ -146,6 +146,36 @@
  {
   "parameters": [
    {
+    "query_config": {
+     "date_format": "%Y-%m-%d %H:%i:%s"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DISTINCT identificacaomateria.codigomateria AS id FROM senado.proposicoes_tramitadas_periodo WHERE date_parse(dataultimaatualizacao, '%(date_format)s') > date_parse('2019-01-31 00:00:00', '%(date_format)s') AND identificacaomateria.codigomateria NOT IN (SELECT DISTINCT identificacaomateria.codigomateria FROM senado.proposicoes)"
+   }
+  ],
+  "data_path": [
+   "DetalheMateria",
+   "Materia"
+  ],
+  "capture_type": "fill-missing-56",
+  "bucket": "brutos-publicos",
+  "exclude_keys": [
+   "AtualizacoesRecentes"
+  ],
+  "key": "legislativo/senado/v1/proposicoes/",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/%(id)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-proposicoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
     "query_config": {},
     "url_params": [
      "id"
@@ -524,7 +554,9 @@
  {
   "parameters": [
    {
-    "query_config": {},
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
     "url_params": [
      "id",
      "data_ini",
@@ -532,7 +564,7 @@
      "twitter"
     ],
     "type": "bigquery",
-    "query": "SELECT id, DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) AS data_ini, DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY) AS data_fim, perfil_twitter FROM `gabinete-compartilhado.bruto_gabinete_administrativo.perfil_twitter_deputado`"
+    "query": "SELECT id, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_ini, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_fim, perfil_twitter FROM `gabinete-compartilhado.bruto_gabinete_administrativo.perfil_twitter_deputado`"
    }
   ],
   "data_path": [],
