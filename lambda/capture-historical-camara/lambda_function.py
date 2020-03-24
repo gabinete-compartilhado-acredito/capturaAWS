@@ -3,6 +3,7 @@ import json
 
 def lambda_handler(event, context):
     
+    dynamo_table = 'capture_urls'
     capture_type = 'historical'
     begins_with = 'camara'
     
@@ -11,7 +12,7 @@ def lambda_handler(event, context):
     response = client.invoke(
             FunctionName='call-step-functions',
             InvocationType='Event',
-            Payload= json.dumps({'capture_type': capture_type,
+            Payload= json.dumps({'dynamo_table': dynamo_table, 'capture_type': capture_type,
                      'begins_with': begins_with})
                      
         )

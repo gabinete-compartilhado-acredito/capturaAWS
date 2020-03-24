@@ -4,13 +4,13 @@ import json
 import time
 
 
-def get_parameters(capture_type, name):
+def get_parameters(dynamo_table, capture_type, name):
     """
-    Selects all dynamoDB items in table 'capture_urls' that have the input 
+    Selects all dynamoDB items in table `dynamo_table` that have the input 
     'capture_type' and that have the string 'name' in its name.
     """
     dynamodb = boto3.resource('dynamodb')
-    table    = dynamodb.Table('capture_urls')
+    table    = dynamodb.Table(dynamo_table)
     response = table.scan()
     filters  = lambda x: (x['capture_type'] == capture_type) & (name in x['name'])
 
@@ -19,13 +19,13 @@ def get_parameters(capture_type, name):
 
 def order_by_dependence(parameters):
     """
-    Takes a list of parameters from capture_urls and organize them by dependence.
+    Takes a list of parameters from a dynamoDB table and organize them by dependence.
     The output is a list of lists; for each sub-list there is a root parameter 
     (that do not depend on anything) and the parameters that do depend 
     """
-    # Selects all capture_urls items that does not depend on others:
+    # Selects all table items that does not depend on others:
     roots = [leaf for leaf in parameters if 'dependence' not in leaf.keys() or leaf['dependence']==None]
-    # Selects all capture_urls items that does depend on others:
+    # Selects all table items that does depend on others:
     leafs = [leaf for leaf in parameters if 'dependence' in leaf.keys() and leaf['dependence']!=None]
 
     graphs = []
@@ -48,12 +48,13 @@ def order_by_dependence(parameters):
 def lambda_handler(event, context):
     # Get input (basically the data set to capture and the periodicity):
     capture_type = event['capture_type']
-    begins_with = event['begins_with']
+    begins_with  = event['begins_with']
+    dynamo_table = event['dynamo_table']
     
     lambd      = boto3.client('lambda')
-    req_event  = {"table_name": "capture_urls", "key": {"name": {"S": None}, "capture_type": {"S": None}}}
-    # Get all the requested capture_urls parameters:
-    parameters = get_parameters(capture_type, begins_with)
+    req_event  = {"table_name": dynamo_table, "key": {"name": {"S": None}, "capture_type": {"S": None}}}
+    # Get all the requested table items (here called 'parameters'):
+    parameters = get_parameters(dynamo_table, capture_type, begins_with)
 
     # Loop over all parameters, after ordering them:
     for graph in order_by_dependence(parameters):
@@ -67,11 +68,24 @@ def lambda_handler(event, context):
                 #print('sleeping...')
                 time.sleep(int(leaf['dependence']['wait']))
 
-            # Call parametrize-API-requests:
-            #print('Starting', leaf['name'])
             print (req_event)
-            lambd.invoke(
-                FunctionName='arn:aws:lambda:us-east-1:085250262607:function:parametrize-API-requests:JustLambda',
-                #FunctionName='arn:aws:lambda:us-east-1:085250262607:function:parametrize-API-requests:DEV',
-                InvocationType='Event',
-                Payload=json.dumps(req_event))    
+            #print('Starting', leaf['name'])
+            
+            if dynamo_table == 'capture_urls':
+                # Call parametrize-API-requests:
+                lambd.invoke(
+                    FunctionName='arn:aws:lambda:us-east-1:085250262607:function:parametrize-API-requests:JustLambda',
+                    #FunctionName='arn:aws:lambda:us-east-1:085250262607:function:parametrize-API-requests:DEV',
+                    InvocationType='Event',
+                    Payload=json.dumps(req_event))
+            
+            elif dynamo_table == 'python_process':
+                # Call parametrize-API-requests:
+                lambd.invoke(
+                    FunctionName='arn:aws:lambda:us-east-1:085250262607:function:python-process:PROD',
+                    #FunctionName='arn:aws:lambda:us-east-1:085250262607:function:python-process:DEV',
+                    InvocationType='Event',
+                    Payload=json.dumps(req_event))
+                
+            else:
+                raise Exception('Unknown dynamo Table')
