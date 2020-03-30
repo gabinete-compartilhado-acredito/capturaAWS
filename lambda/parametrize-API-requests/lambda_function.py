@@ -393,6 +393,48 @@ def adapt_url_key(body_entry):
     return body_entry
     
 
+def read_parallel_batches(response):
+    """
+    Given a `response` from dynamoDB's get_item (after translating from dyJSON, 
+    that is, a dict where the important information, the content of a table's item, 
+    is inside the key 'Item'), return the number of parallel batches in which to 
+    split the requests. This is 1 by default, or something else if specified in the 
+    dynamoDB item.
+    """
+    
+    parallel_key = 'parallel_batches'
+    config = response['Item']
+    
+    if parallel_key not in config.keys() or config[parallel_key] == None or config[parallel_key] <= 1:
+        return 1
+    
+    else:
+        return config[parallel_key]
+
+
+def split_parallel_batches(body, n_batches):
+    """
+    Given a list `body` and an integer `n_batches`, tries to split `body` 
+    into `n_batches` sub-lists. For certain combinations of parameters, 
+    the number of sub-lists is different than the requested number `n_batches`.
+    It is recommended to measure the length of the returned list of batches.
+    """
+    n_requests = len(body)
+    
+    # Set batch sizes:
+    batch_sizes = [round(n_requests / n_batches) for i in range(n_batches)]
+    batch_sizes[0] = max(n_requests - sum(batch_sizes[1:]), 0)
+
+    # Set positions that mark the start and end of batches:
+    batch_pos = [sum(batch_sizes[:i]) for i in range(n_batches + 1)]
+    
+    # Split into batches
+    batches = [body[batch_pos[i]:batch_pos[i+1]] for i in range(n_batches) \
+               if len(body[batch_pos[i]:batch_pos[i+1]]) > 0]
+    
+    return batches    
+    
+
 def lambda_handler(event, context):
     """
     Cria lista de de URLs para baixar, e depois chama o lambd.invoke que 
@@ -414,41 +456,48 @@ def lambda_handler(event, context):
     
     print("Starting parametrize-API-requests with event:")
     print(event)
-    
+
     # Cria cliente do dynamo:
     client = boto3.client('dynamodb')
-    
+
     # Seleciona um arquivo do dynamo:
     response = client.get_item(TableName=event['table_name'], 
                                 Key=event['key'])
-    
+
     # Lê o arquivo do dynamo (retorna uma lista de dicionários ou um dicionário):
     response = dyjson.loads(response)
     if debug == True:
         print("dict of dynamo Table:") 
         print(response)
-    
+
     # Gera as URLs e os filenames (destino):
     body = generate_body(response, event)
     # Rename 'url' key if it is not an url:
     body = [adapt_url_key(b) for b in body]
-    
-    # Salva os as informações geradas acima no dynamo como uma tabela temp:
-    params = create_and_populate_dynamodb_table(body, event)
-    if debug == True:
-        print('URLs to capture listed in:')
-        print(params)
-    
+
+    # Split requests in parallel batches according to config:
+    n_batches = read_parallel_batches(response)
+    body_batches = split_parallel_batches(body, n_batches)
+
     # Chama cliente do lambda:
     lambd = boto3.client('lambda')
-    
-    # Faz a caputa efetivamente, com os parâmetros criados por generate_body e 
-    # salvos por create_and_populate_dynamodb_table:
-    
-    #return 0
-    
-    lambd.invoke(
-        FunctionName='arn:aws:lambda:us-east-1:085250262607:function:http-request:JustLambda',
-        #FunctionName='arn:aws:lambda:us-east-1:085250262607:function:http-request:DEV',
-        InvocationType='Event',
-        Payload=json.dumps(params))
+
+    for body in body_batches:
+        print('Create dynamo temp table with', len(body), 'entries')
+
+        # Salva os as informações geradas acima no dynamo como uma tabela temp:
+        params = create_and_populate_dynamodb_table(body, event)
+        if debug == True:
+            print('URLs to capture listed in:')
+            print(params)
+
+        # Faz a captura efetivamente, com os parâmetros criados por generate_body e 
+        # salvos por create_and_populate_dynamodb_table:    
+        if True:
+            if debug:
+                print('Invoking http-request...')
+            lambd.invoke(
+                FunctionName='arn:aws:lambda:us-east-1:085250262607:function:http-request:JustLambda',
+                #FunctionName='arn:aws:lambda:us-east-1:085250262607:function:http-request:DEV',
+                InvocationType='Event',
+                Payload=json.dumps(params))
