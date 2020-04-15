@@ -196,7 +196,13 @@ def get_articles_url(config):
     if debug:
         print('Narticles_in_section:', Narticles_in_section)
     
-    return url_file_list, update_config(config, Narticles_in_section)
+    # Only update config if it is going to be saved in Dynamo later on.
+    if config['update_config']:
+        next_config = update_config(config, Narticles_in_section)
+    else:
+        next_config = config
+        
+    return url_file_list, next_config
 
 
 def entrypoint(params):
@@ -211,10 +217,12 @@ def entrypoint(params):
     # Load config from dynamoDB:
     if params['use_config']:
         config = load_remote_config(params['dynamo_table'], params['config_key'])
+        config['update_config'] = True
     # Or use directly supplied parameters:
     else:
         config = params
-    
+        config['update_config'] = False
+        
     # Get list of articles to download and update config:
     url_file_list, next_config = get_articles_url(config)
     
