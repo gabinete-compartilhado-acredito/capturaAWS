@@ -482,7 +482,8 @@ def lambda_handler(event, context):
     # Chama cliente do lambda:
     lambd = boto3.client('lambda')
 
-    for body in body_batches:
+    
+    for body in body_batches:  # If body_batches == [], it skips everything in the loop.
         print('Create dynamo temp table with', len(body), 'entries')
 
         # Salva os as informações geradas acima no dynamo como uma tabela temp:

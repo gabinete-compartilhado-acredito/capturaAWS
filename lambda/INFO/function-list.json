@@ -117,12 +117,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 403,
+            "CodeSize": 463,
             "Description": "",
             "Timeout": 123,
             "MemorySize": 128,
-            "LastModified": "2020-03-20T21:38:14.384+0000",
-            "CodeSha256": "Dd9plfDurq9h9Ko0/TsuBLjdQX5tuBnqJPGVxmknccA=",
+            "LastModified": "2020-03-30T19:40:46.676+0000",
+            "CodeSha256": "ZJ2PjMJJoBM8TMkOf2Ez11/eE3szlXMEoSThs/9QdIU=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -132,7 +132,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "fded8853-3733-43a8-91fa-2e2ca438fb6a"
+            "RevisionId": "bd6a8a50-0f10-41c3-b253-510c55c7ebf5"
         },
         {
             "FunctionName": "capture-historical-camara",
@@ -278,12 +278,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 7363,
+            "CodeSize": 9051,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 128,
-            "LastModified": "2020-03-26T20:23:17.654+0000",
-            "CodeSha256": "OjS5jyezIZtbpsJRcFgETkAuWzdln//RjcjpJi34zMY=",
+            "LastModified": "2020-03-30T19:46:17.312+0000",
+            "CodeSha256": "SQ28559hg7U+TXck9tMa2TFC98T3wnrEBMyGv0CbB6Q=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -298,7 +298,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "4fcf2e6b-601a-47c6-b403-edf8050163bd",
+            "RevisionId": "57a76669-859d-4a38-9b55-dd4aca7dfa47",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
@@ -583,12 +583,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 10773,
+            "CodeSize": 10898,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 640,
-            "LastModified": "2020-02-18T14:35:55.434+0000",
-            "CodeSha256": "Gt5adWe4s26D4RH2ZHq6Rp/7o07SN14sAC1glkaDvjs=",
+            "LastModified": "2020-04-15T17:42:13.016+0000",
+            "CodeSha256": "573srFvGrF+64K6Fgd3be5aW6w8R/GOaAI9aBnz+ZQk=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -598,7 +598,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "7d5b2ebb-8e21-4269-b403-5781f4b28f6f",
+            "RevisionId": "f40ac569-eda7-4d7b-89ca-52926b9bd607",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:http-request_Core:1",
