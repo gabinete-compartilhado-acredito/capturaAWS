@@ -1,23 +1,43 @@
 [
  {
-  "article_batch_size": 500,
   "date_format": "%Y-%m-%d",
   "last_extra": 0,
-  "end_date": "2020-03-30",
+  "end_date": "2020-05-06",
   "secao": [
    "e"
   ],
-  "1st_article": 0,
-  "name": "capture_DOU",
-  "save_articles": false,
+  "save_articles": true,
+  "name": "build_DOU_database",
   "slack_token": "not required",
   "timedelta": 0,
-  "storage_path": "not required",
   "secao_all": [
+   1,
+   2,
+   3,
+   "e"
+  ],
+  "storage_path": "not required",
+  "post_articles": false,
+  "filter_file": "not_required",
+  "update_config": true
+ },
+ {
+  "article_batch_size": 500,
+  "url_list": "dou_captured_urls",
+  "date_format": "%Y-%m-%d",
+  "end_date": "2020-05-06",
+  "secao": [
    1,
    2,
    "e"
   ],
+  "daily_clean_url_list": true,
+  "name": "capture_DOU",
+  "save_articles": false,
+  "next_batch": false,
+  "slack_token": "not required",
+  "timedelta": 0,
+  "storage_path": "not required",
   "post_articles": true,
   "filter_file": "not_required"
  }

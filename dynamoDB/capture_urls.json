@@ -68,9 +68,9 @@
   "parameters": [
    {
     "params": {
-     "end_date": "yesterday",
+     "end_date": "2019-04-19",
      "debug": false,
-     "timedelta": 0,
+     "timedelta": -1,
      "date_format": "%Y-%m-%d",
      "save_articles": true,
      "secao": [
@@ -79,13 +79,21 @@
       3,
       "e"
      ],
+     "secao_all": [
+      1,
+      2,
+      3,
+      "e"
+     ],
+     "use_config": false,
      "post_articles": false
     },
     "type": "external_module"
    }
   ],
   "data_path": [],
-  "capture_type": "daily",
+  "parallel_batches": 5,
+  "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "executivo/federal/dou/",
   "headers": {},
@@ -93,27 +101,19 @@
   "data_type": "external_module"
  },
  {
+  "parallel_batches": 4,
   "parameters": [
    {
     "params": {
-     "end_date": "2019-04-30",
-     "debug": false,
-     "timedelta": -2,
-     "date_format": "%Y-%m-%d",
-     "save_articles": true,
-     "secao": [
-      1,
-      2,
-      3,
-      "e"
-     ],
-     "post_articles": false
+     "config_key": "build_DOU_database",
+     "use_config": true,
+     "dynamo_table": "configs"
     },
     "type": "external_module"
    }
   ],
   "data_path": [],
-  "capture_type": "historical",
+  "capture_type": "live",
   "bucket": "brutos-publicos",
   "key": "executivo/federal/dou/",
   "headers": {},
@@ -136,6 +136,13 @@
       3,
       "e"
      ],
+     "secao_all": [
+      1,
+      2,
+      3,
+      "e"
+     ],
+     "use_config": false,
      "post_articles": false
     },
     "type": "external_module"
@@ -143,6 +150,42 @@
   ],
   "data_path": [],
   "capture_type": "now",
+  "bucket": "brutos-publicos",
+  "key": "executivo/federal/dou/",
+  "headers": {},
+  "name": "executivo-federal-dou",
+  "data_type": "external_module"
+ },
+ {
+  "parallel_batches": 5,
+  "parameters": [
+   {
+    "params": {
+     "end_date": "yesterday",
+     "debug": false,
+     "timedelta": 0,
+     "date_format": "%Y-%m-%d",
+     "save_articles": true,
+     "secao": [
+      1,
+      2,
+      3,
+      "e"
+     ],
+     "secao_all": [
+      1,
+      2,
+      3,
+      "e"
+     ],
+     "use_config": false,
+     "post_articles": false
+    },
+    "type": "external_module"
+   }
+  ],
+  "data_path": [],
+  "capture_type": "yesterday",
   "bucket": "brutos-publicos",
   "key": "executivo/federal/dou/",
   "headers": {},
