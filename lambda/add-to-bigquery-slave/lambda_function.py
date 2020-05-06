@@ -211,7 +211,7 @@ def save_raw_data_to_local_local(temp_data, bucket, prefix, max_bytes):
 
     print(bucket, prefix)
 
-    file_list = glob(event['prefix'] + '*')
+    file_list = glob(prefix + '*')
     for i, file in enumerate(file_list):
         if i > 100:
             print('breaking')
