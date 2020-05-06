@@ -10,9 +10,9 @@
         {
             "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:capture_dou:PROD",
             "Name": "PROD",
-            "FunctionVersion": "9",
+            "FunctionVersion": "11",
             "Description": "Production version, with cron trigger",
-            "RevisionId": "60b09b7f-332f-42b1-a326-978d59964c59"
+            "RevisionId": "f631f78d-aef6-4c3b-a1f7-5e61015dd24c"
         }
     ]
 }

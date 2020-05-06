@@ -364,12 +364,12 @@
             "Runtime": "python3.6",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 20999,
+            "CodeSize": 22054,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 192,
-            "LastModified": "2020-03-06T19:31:24.494+0000",
-            "CodeSha256": "rcEoX0oVRGWRyN2mXh9YANJfbWPA3ry1CApoPONo208=",
+            "LastModified": "2020-05-06T12:19:25.711+0000",
+            "CodeSha256": "2CMFdfl0Tg6DD1EoWp27BLI9ACukdFGL78VfTeYT60s=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -384,7 +384,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "04b5cf6e-0b2e-4fce-9279-f2ee2b7be853",
+            "RevisionId": "d73ff410-5c81-4228-96b9-325d4f68b884",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:requests:1",
@@ -507,12 +507,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 3007,
+            "CodeSize": 3005,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 1088,
-            "LastModified": "2020-01-27T15:32:07.847+0000",
-            "CodeSha256": "etOm+Co3IV1PA++SS/NtVsNtJ/iVE0di79xsY3qfJJY=",
+            "LastModified": "2020-04-27T21:16:08.093+0000",
+            "CodeSha256": "J0ar3zTn0+RPAxVdY8eKucRzAdMXzByMfJXBa/DXceY=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -527,7 +527,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "ce8feb75-93b5-4e0d-80cb-76abc5904628",
+            "RevisionId": "2c56cb8e-194d-4a59-9b47-330501dd7d0e",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:bigquery-schema-generator:1",
