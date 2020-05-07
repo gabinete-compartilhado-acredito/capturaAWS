@@ -210,18 +210,16 @@ def filter_captured_urls(urls_files, url_list_file):
 
 def update_config(config, Nurls):
     """
-    Given a config file for capturing DOU articles' URLs and a dict 
-    that states how many articles were found in each requested section
-    'Narticles_in_section', return an updated config for the next request 
-    try. 
+    Given a config file for capturing DOU articles' URLs and the number of
+    articles that sgould be downloaded prior to batch size limitations `Nurls`,
+    return an updated config for the next request try. 
     
     Required config keys:
     * end_date    > The articles' date to request the URLs;
     * date_format > The format of the date above (e.g. %Y-%m-%d);
-    * secao       > Current list of sections to request URLs;
-    * secao_all   > All sections one may want to request (does not update);
-    * timedelta   > Current implementation requires this to be 0.
-    * last_extra  > The extra edition number of the last capture.
+    * timedelta   > Current implementation requires this to be 0;
+    * url_list    > filename (or DynamoDB table name) where a list of captured URLs is stored;
+    * daily_clean_url_list > Whether or not to erase the content of url_list once the current day change.
     """
     
     if config['timedelta'] != 0:
@@ -237,7 +235,7 @@ def update_config(config, Nurls):
         return config2
     else:
         config2['next_batch'] = False
-    
+        
     
     # If end_date is in the past, return next day and clean captured URLs list (if requested):
     if end_date < brasilia_day():
@@ -257,6 +255,8 @@ def get_articles_url(config):
     * 'end_date':    last date to search for URLs (one can set to 'now' to get the current day); 
     * 'secao':       list of DOU sections to scan (1, 2, 3, e and/or 1a, or set to 'all' for '[1,2,3,e]';
     * 'timedelta':   number of days from end_date to start URL search (is a negative number);
+    * 'url_list':    filename or dynamoDB table name of a list of captured URLs (to avoid capturing again).
+    * 'daily_clean_url_list': whether or not to erase 'url_list' every day.
 
     and creates a list of DOU articles' URLs to download. 
     """
@@ -299,7 +299,6 @@ def get_articles_url(config):
     
     # LOOP over dates:
     url_file_list = []
-    Narticles_in_section = dict(zip(secoes, [0]*len(secoes)))
     start_date = end_date + timedelta
     if gs.debug == True:
         print('Will enter loop over config date and section range:')    
@@ -311,7 +310,6 @@ def get_articles_url(config):
             if gs.debug == True:
                 print('   -- s'+str(s))
             jsons = get_artigos_do(date, s)
-            Narticles_in_section[s] = len(jsons)
             # LOOP over downloaded URL list:
             if gs.debug == True:
                 print('      Looping over URLs...')            
@@ -328,10 +326,7 @@ def get_articles_url(config):
         # Chop article list to fit into AWS time limit:
         batch_size    = config['article_batch_size']
         url_file_list = url_file_list[:batch_size]
-    
-    #if gs.debug:
-    #    print('Narticles_in_section (total):', Narticles_in_section)    
-        
+            
     return url_file_list, update_config(config, Nurls)
 
 

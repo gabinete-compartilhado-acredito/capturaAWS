@@ -472,6 +472,8 @@ def lambda_handler(event, context):
 
     # Gera as URLs e os filenames (destino):
     body = generate_body(response, event)
+    if debug:
+        print('# items to capture (body length):', len(body))
     # Rename 'url' key if it is not an url:
     body = [adapt_url_key(b) for b in body]
 

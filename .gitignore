@@ -9,3 +9,4 @@ layers/layers
 layers/python
 lambda/parametrize-API-requests/.ipynb_checkpoints
 dynamoDB/dou_captured_urls.json
+dynamoDB/douDB_captured_urls.json

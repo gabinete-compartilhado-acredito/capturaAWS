@@ -79,12 +79,6 @@
       3,
       "e"
      ],
-     "secao_all": [
-      1,
-      2,
-      3,
-      "e"
-     ],
      "use_config": false,
      "post_articles": false
     },
@@ -136,12 +130,6 @@
       3,
       "e"
      ],
-     "secao_all": [
-      1,
-      2,
-      3,
-      "e"
-     ],
      "use_config": false,
      "post_articles": false
     },
@@ -167,12 +155,6 @@
      "date_format": "%Y-%m-%d",
      "save_articles": true,
      "secao": [
-      1,
-      2,
-      3,
-      "e"
-     ],
-     "secao_all": [
       1,
       2,
       3,

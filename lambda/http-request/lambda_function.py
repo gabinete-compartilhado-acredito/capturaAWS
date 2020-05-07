@@ -1,6 +1,7 @@
 import json
 import requests
 import boto3
+from botocore.exceptions import EndpointConnectionError
 import xmltodict
 from collections import MutableMapping
 from datetime import datetime
@@ -270,10 +271,34 @@ def copy_s3_to_storage_gcp(order, bucket, key):
         if debug:
             print('Invoking write-to-storage-gcp...')
         # Order lambda to save this result to storage (Google):
-        lambd.invoke(
-         FunctionName='arn:aws:lambda:us-east-1:085250262607:function:write-to-storage-gcp:JustLambda',
-         InvocationType='Event',
-         Payload=json.dumps(params))
+        try:
+            lambd.invoke(
+                FunctionName='arn:aws:lambda:us-east-1:085250262607:function:write-to-storage-gcp:JustLambda',
+                InvocationType='Event',
+                Payload=json.dumps(params))
+        except(EndpointConnectionError):
+            print('Failed to call write-to-storage-gcp')
+            return 2
+    
+        return 200
+    
+    # order < 0:
+    print('Should never get here')
+    return 3
+    
+
+def register_captured_url_aws(table_name, url):
+    """
+    Put the `url` (str) as a new item in AWS DynamoDB table 
+    `table_name` (str).
+    """
+    # Pega a referência (pointer) da tabela do dynamo:    
+    dynamodb = boto3.resource('dynamodb')
+    table    = dynamodb.Table(table_name)
+
+    # Escreve os dicionários criados pela função generate_body na tabela do dynamo: 
+    with table.batch_writer() as batch:
+        batch.put_item(Item={'url': url})
 
 
 def get_and_save(params, event):
@@ -315,7 +340,18 @@ def get_and_save(params, event):
             print('write_to_s3 status code:', status_code_s3)
 
         # Copy the result to GCP storage:
-        copy_s3_to_storage_gcp(params['order'], event['bucket'], event['key'])
+        status_code_gcp = 10
+        if status_code_s3 == 200:
+            status_code_gcp = copy_s3_to_storage_gcp(params['order'], event['bucket'], event['key'])
+
+        # Registra url capturado em tabela do dynamo, se tal ação for requisitada:
+        if 'url_list' in event['aux_data'].keys():
+            if status_code_gcp == 200:
+                if debug:
+                    print('Register sucessful capture on table' + event['aux_data']['url_list'])
+                register_captured_url_aws(event['aux_data']['url_list'], event['url'])
+            elif debug:
+                print('Capture failed for ' + event['url'])
 
         # TODO: colocar como lidar com erros no GET.
     
