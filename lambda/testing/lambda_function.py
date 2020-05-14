@@ -44,6 +44,8 @@ def lambda_handler(event, context):
     model_file = save_to_tmp('config-lambda', 'models/req_classifier_svm_2020-03-17/tested_model.joblib', string=False)
     best_pipeline = joblib.load(model_file)
     
+    return 
+    
     # Load data:
     train_file = save_to_tmp('config-lambda', 'models/req_classifier_svm_2020-03-17/train_data.csv')
     train_df = pd.read_csv(train_file)
