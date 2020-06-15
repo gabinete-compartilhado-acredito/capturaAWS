@@ -10,9 +10,9 @@
         {
             "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:python-process:PROD",
             "Name": "PROD",
-            "FunctionVersion": "3",
+            "FunctionVersion": "4",
             "Description": "In production",
-            "RevisionId": "17d29814-7b78-47d9-bdc8-0b9e9f267fdd"
+            "RevisionId": "5c185136-8104-4ad1-841d-73480a28b2e7"
         }
     ]
 }

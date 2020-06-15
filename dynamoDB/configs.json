@@ -2,7 +2,7 @@
  {
   "url_list": "douDB_captured_urls",
   "date_format": "%Y-%m-%d",
-  "end_date": "2020-05-14",
+  "end_date": "2020-06-15",
   "secao": [
    1,
    2,
@@ -23,7 +23,7 @@
   "article_batch_size": 500,
   "url_list": "dou_captured_urls",
   "date_format": "%Y-%m-%d",
-  "end_date": "2020-05-14",
+  "end_date": "2020-06-15",
   "secao": [
    1,
    2,

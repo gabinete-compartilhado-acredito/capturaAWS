@@ -154,6 +154,42 @@ def decoded_full_text(article):
     return full_text
 
 
+def make_resumo(fulltext):
+    """
+    Given a string (fulltext), this function aims to extract 
+    the most important part of it as a abstract.
+    """
+
+    # Termos a serem pesquisados:
+    termos = ['resolve:', 'onde se l', 'objeto:', 'espécie']
+    # Tamanho do resumo:
+    resumo_size = 300
+    
+    # Alterando o texto para minúsculo    
+    fulltext  = str(fulltext)
+    paragraph = fulltext.lower()
+         
+    for termo in termos:
+        
+        pos = paragraph.find(termo)
+        
+        if pos != -1: 
+            # Se encontra algum dos termos, resume o texto com os 300 primeiros caracteres 
+            # a partir do termo encontrado.
+            abstract = fulltext[pos:pos + resumo_size]    
+            break            # O break aqui serve para garantir que, caso um termo seja encontrado, 
+                             # não busque pelos demais.
+        
+    if pos == -1:
+            abstract = fulltext[:resumo_size]   # Se não encontra nenhum dos termos, resume o texto 
+                                                # nos primeros 300 caracteres.          
+    
+    if len(fulltext[pos:]) > len(abstract):
+        abstract = abstract + '...'
+    
+    return abstract
+
+
 def get_data(article):
     """
     Get relevant data from html. It recursevely gets leaf text from html
@@ -177,6 +213,8 @@ def get_data(article):
     
     # Include full-text:
     data['fulltext'] = decoded_full_text(article)
+    # Include resumo:
+    data['resumo'] = make_resumo(data['fulltext'])
     
     return data
 

@@ -60,6 +60,60 @@
   "name": "classify_reqs_camara"
  },
  {
+  "capture_type": "test",
+  "output_data": {
+   "bucket": "brutos-publicos",
+   "type": "s3_gcp_file",
+   "key": "executivo/federal/ranked_dou/%(today)s_s2_%(yesterday)s_se.json",
+   "key_pars": []
+  },
+  "code": {
+   "bucket": "config-lambda",
+   "key": "models/dou-2_sorter_ensemble_2020-06-08/production_model.joblib"
+  },
+  "input_data": {
+   "bucket": "brutos-publicos",
+   "honorary_list": [
+    "url",
+    "url_certificado",
+    "capture_date"
+   ],
+   "col_names": [
+    "identifica",
+    "orgao",
+    "ementa",
+    "fulltext",
+    "secao",
+    "edicao",
+    "pagina",
+    "data_pub",
+    "assina",
+    "cargo",
+    "url",
+    "url_certificado",
+    "capture_date"
+   ],
+   "key_list": [
+    "identifica",
+    "orgao-dou-data",
+    "ementa",
+    "fulltext",
+    "secao-dou",
+    "edicao-dou-data",
+    "secao-dou-data",
+    "publicado-dou-data",
+    "assina",
+    "cargo"
+   ],
+   "type": "s3_njson",
+   "key": [
+    "executivo/federal/dou/%(today)s_s2",
+    "executivo/federal/dou/%(yesterday)s_se"
+   ]
+  },
+  "name": "sort_dou_2"
+ },
+ {
   "capture_type": "daily_9am",
   "output_data": {
    "bucket": "brutos-publicos",
