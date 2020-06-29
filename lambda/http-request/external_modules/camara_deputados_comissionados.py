@@ -84,6 +84,17 @@ def structure_remuneracao(remuneracao_dict_list):
     return dict(zip(tags, values))
     
 
+def get_full_link(link):
+    """
+    Add domain to link if missing:
+    """
+    domain = 'https://www.camara.leg.br'
+    if link[4] != 'http' and link[0] == '/':
+        return domain + link
+    else:
+        return link
+    
+
 def entrypoint(response, event):
     
     url = event['url']
@@ -100,7 +111,7 @@ def entrypoint(response, event):
     
     # Get comissionado's salary links:
     links = soup.find_all('a')
-    comissionado_links = [link.attrs['href'] for link in links if link.text == 'Consulta']
+    comissionado_links = [get_full_link(link.attrs['href']) for link in links if link.text == 'Consulta']
     
     # Collect information about all active comissionados:
     comis_data_list = []
