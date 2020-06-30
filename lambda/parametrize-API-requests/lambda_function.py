@@ -242,6 +242,16 @@ def generate_forms(item, event):
     
     Retorno: forms, que é basicamente uma lista de dicionários que 
     cada dicionário contém um URL e uma filename (destino).
+    
+    Input
+    -----
+    
+    item : dict
+        Este é o conteúdo de um item da tabela DynamoDB capture_urls, isto é,
+        um JSON de configuração de captura.
+        
+    event : dict
+        Este é o input da função principal lambda_handler.
     """
     
     # Pega entrada 'parameters' no arquivo do dynamo:
@@ -291,6 +301,16 @@ def generate_body(response, event):
     """
     Gera as URLs a partir de informações em arquivo 'response' do dynamo,
     e outras coisas (metadados necessários).
+    
+    Input
+    -----
+    
+    response : dynamoDB.get_item response
+        The content of the item in dynamoDB capture_urls table 
+        is stored in response['Item'].
+        
+    event : dict
+        The input of the main function lambda_handler.
     """
     
     # Gera as URLs:
@@ -306,18 +326,22 @@ def generate_body(response, event):
     # Do item vem filename e url, o resto vem do dynamo, basicamente infos 
     # sobre localização dos dados.
     
-        request_pars = dict(url=item.pop('url'),
-                            params={},
-                            headers=response['Item']['headers'],
-                            bucket=response['Item']['bucket'],
-                            key=response['Item']['key'] + item.pop('filename'),
-                            data_type=response['Item']['data_type'],
-                            data_path=response['Item']['data_path'],
+        # Este vai ser o dicionário em cada linha da tabela temp do dynamoDB
+        # que a Lambda http-request vai carregar e utilizar como informação 
+        # para realizar o download.
+        request_pars = dict(url=item.pop('url'), # O url definido por generate_forms acima.
+                            params={}, # Parâmetros do HTTP GET.
+                            headers=response['Item']['headers'], # Headers do HTTP GET.
+                            bucket=response['Item']['bucket'], # bucket onde salvar os dados baixados.
+                            key=response['Item']['key'] + item.pop('filename'), # Path onde salvar os dados baixados.
+                            data_type=response['Item']['data_type'], 
+                            data_path=response['Item']['data_path'], # Caminho em uma árvore de dados (e.g. XML) até os dados desejados.
                             exclude_keys=response['Item']['exclude_keys'],
                             records_keys=response['Item']['records_keys'],
-                            name=response['Item']['name']
+                            name=response['Item']['name'],
+                            requests_pars=response['Item']['requests_pars'] # Parâmetros do item do capture_urls a serem passados à Lambda http-request.
                            )
-        request_pars['aux_data'] = item
+        request_pars['aux_data'] = item # Parâmetros gerados por generate_forms a serem passados à Lambda http-request.
     
         body.append(request_pars)
         

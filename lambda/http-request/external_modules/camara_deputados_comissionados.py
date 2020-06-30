@@ -82,8 +82,8 @@ def structure_remuneracao(remuneracao_dict_list):
     tags   = [descricao_to_tag(tuple(r.values())[0]) for r in remuneracao]
     values = [parse_ptbr_number(tuple(r.values())[1]) for r in remuneracao]
     return dict(zip(tags, values))
+ 
     
-
 def get_full_link(link):
     """
     Add domain to link if missing:
@@ -93,7 +93,7 @@ def get_full_link(link):
         return domain + link
     else:
         return link
-    
+
 
 def entrypoint(response, event):
     

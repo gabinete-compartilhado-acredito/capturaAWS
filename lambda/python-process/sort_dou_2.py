@@ -1,30 +1,31 @@
-# Entrypoint for processing data according to dynamodb config "sort_dou_1".
+# Entrypoint for processing data according to dynamodb config "sort_dou_2".
 
 import pandas as pd
 import re
 import dou_preparer as dp
 
-def sel_dou_1(input_data):
+
+def sel_dou_2(input_data):
     """
-    Use hard-coded criteria to pre-select articles from DOU section 1.
+    Use hard-coded criteria to pre-select articles from DOU section 2.
     Input and output are Pandas DataFrames.
     """
-    identifica_regex = '(?:portaria|decreto|resolu|medida provisória)'
-    veto_orgao_regex = '(?:universidade|instituto federal|superintendência regional|superintendência estadual|colégio|coordenação de processos migratórios|secretaria de fomento e incentivo à cultura|departamento de radiodifusão comercial)'
+    
+    veto_orgao_regex = '(?:universidade|instituto federal|superintendência regional|gerência regional|superintendência estadual|colégio|comando militar|hospital)'
     veto_orgao_root  = ['Conselho Nacional do Ministério Público',
                         'Entidades de Fiscalização do Exercício das Profissões Liberais', 
                         'Governo do Estado', 'Ineditoriais', 'Defensoria Pública da União', 
                         'Ministério Público da União', 'Poder Judiciário', 'Prefeituras', 
-                        'Tribunal de Contas da União', 'Atos do Poder Judiciário']
-
-    # Get secao 1:
-    sel_data = input_data.loc[input_data['secao'] == 1]
+                        'Tribunal de Contas da União', 'Atos do Poder Judiciário', 'Poder Legislativo']
+    veto_fulltext_regex = '(?:conceder aposentadoria|aposentar|conceder pensão|afastamento do país)'
+    
+    # Get secao 2:
+    sel_data = input_data.loc[input_data['secao'] == 2]
     
     # Apply cuts:
-    sel_data = sel_data.loc[(~sel_data['identifica'].isnull()) & 
-                            (sel_data['identifica'].str.lower().str.contains(identifica_regex))]
     sel_data = sel_data.loc[~sel_data['orgao'].str.lower().str.contains(veto_orgao_regex)]
     sel_data = sel_data.loc[~sel_data.orgao.apply(lambda s: s.split('/')[0]).isin(veto_orgao_root)]
+    sel_data = sel_data.loc[~sel_data['fulltext'].str.lower().str.contains(veto_fulltext_regex)]
     
     return sel_data
     
@@ -40,7 +41,7 @@ def process(code, input_data):
     dp.prepare_dou_df(input_data)
 
     # Select relevant data:
-    input_data = sel_dou_1(input_data)
+    input_data = sel_dou_2(input_data)
     
     # Predict:
     predicted_class = code.predict(input_data)

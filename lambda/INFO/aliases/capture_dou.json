@@ -12,7 +12,7 @@
             "Name": "PROD",
             "FunctionVersion": "13",
             "Description": "Production version, with cron trigger",
-            "RevisionId": "55ea5020-3665-41ce-9f57-87694d0ddbd9"
+            "RevisionId": "4cfc170a-8359-4086-92dc-7201f8017234"
         }
     ]
 }

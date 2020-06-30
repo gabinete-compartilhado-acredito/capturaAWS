@@ -11,9 +11,9 @@ import sys
 sys.path.insert(0, "external_modules")
 import importlib
 
-# For debugging:
+# For debugging (print out more comments during execution):
 debug = False
-# To run it locally:
+# To run it locally (not in AWS), set to True:
 local = False
 
 
@@ -200,7 +200,6 @@ def write_to_s3(event, response):
         if debug:
             print('save_to_s3 = False: do not save to S3.')
         return None 
-        
     if not len(in_json):
         if debug:
             print('len(in_json)=0: do not save to S3.')
@@ -234,23 +233,29 @@ def load_params(event):
     """
     Pega no dynamo um dicionário especificado pelo order no 
     event.
+    
+    Sample input : dict
+        {'dynamo_table_name': 'temp-capture-camara-tramitacoes-live-2020-06-23-16-30-26', 'order': 5}
+        (the dict containing the DynamoDB temp table and the Item's key 'order')
     """
-    # Similar ao client de dynamo:
+    # Similar a um Client de dynamo, para acessar as tabelas:
     dynamodb = boto3.resource('dynamodb')
     
     # Pega a tabela do dynamo especificada em event:
     table = dynamodb.Table(event['dynamo_table_name'])
     
-    # Lega "linha" da tabela do dynamo com order dado pelo event 
+    # Pega a "linha" da tabela do dynamo dada pela 'order' no `event`: 
     # (linha é um dicionário, na verdade):
     response = table.get_item(Key={'order': event['order']})
 
-    # Carrega o dicionário:
+    # Carrega o dicionário para `response`:
     response = dyjson.loads(response)
     
     # Além do item, o .get_item também devolve metadados. Aqui 
     # pegamos apenas o item mesmo:
     return response['Item']
+    # Essa função retorna um dicionário com estrutura similar a descrita 
+    # no docstring da função `lambda_handler`, na parte "For testing purposes".
 
   
 def copy_s3_to_storage_gcp(order, bucket, key):
@@ -291,12 +296,15 @@ def register_captured_url_aws(table_name, url):
     """
     Put the `url` (str) as a new item in AWS DynamoDB table 
     `table_name` (str).
+    
+    The purpose of this function is to keep track of files (urls) already
+    downloaded.
     """
     # Pega a referência (pointer) da tabela do dynamo:    
     dynamodb = boto3.resource('dynamodb')
     table    = dynamodb.Table(table_name)
 
-    # Escreve os dicionários criados pela função generate_body na tabela do dynamo: 
+    # Registra o `url` como um novo item na tabela do DynamoDB: 
     with table.batch_writer() as batch:
         batch.put_item(Item={'url': url})
 
@@ -307,11 +315,38 @@ def get_and_save(params, event):
     - 'params': a dict with a dynamoDB temp table name and an position ('order') of a 
       data in the table;
     - 'event': a dict with lots of info about the data location, type, parts to extract, 
-      where to save it, etc.
+      where to save it, etc. This was loaded from the dynamoDB temp table.
+      
+    Sample input
+    ------------
+    
+    params : dict
+        {'dynamo_table_name': 'temp-capture-camara-tramitacoes-live-2020-06-23-16-30-26', 'order': 5}
+    
+    event : dict
+       {"aux_data": {},
+        "bucket": "brutos-publicos",
+        "data_path": ["dados"],
+        "data_type": "external_module",
+        "exclude_keys": None,
+        "headers": {},
+        "key": "legislativo/camara/scrapping/comissionados/camara-deputados-comissionados_id=137070&ano=2020&mes=6.json",
+        "name": "camara-deputados-comissionados",
+        "order": 0,
+        "params": {},
+        "records_keys": None,
+        "url": "https://www.camara.leg.br/deputados/137070/pessoal-gabinete?ano=2020"}
+
+    PS: `event` might contain other keys not listed above. This depends on the 
+    kind of data being downloaded.
       
     This function downloads the data and save it to AWS S3 and Google Storage.
+    Basically, the data is captured from `event['url']` and saved to 
+    `event['key']` (in bucket `event['bucket']`).
     """ 
-    # Set max_retries for HTTP GET to 3:
+    
+    # Set max_retries for HTTP GET to 3 (instead of one):
+    # This makes the download more robust.
     session = requests.Session()
     session.mount('http', requests.adapters.HTTPAdapter(max_retries=3))
     
@@ -323,10 +358,13 @@ def get_and_save(params, event):
                                params=event['params'], 
                                headers=event['headers'], # configs para HTTP GET.
                                timeout=30)
+    # Algumas capturas (e.g. tweets) não possuem url. Nesse caso, apenas 
+    # continua abaixo:
     else:
         response = None
         
-    # Rodou bem ou ainda vai capturar (caso sem url):                       
+    # Se captura ocorreu bem ou se ainda vai capturar (no caso sem url),
+    # salva na AWS S3 e Google Storage:
     if response == None or (response != None and response.status_code == 200):
         if debug:
             if response != None:
@@ -344,7 +382,12 @@ def get_and_save(params, event):
         if status_code_s3 == 200:
             status_code_gcp = copy_s3_to_storage_gcp(params['order'], event['bucket'], event['key'])
 
-        # Registra url capturado em tabela do dynamo, se tal ação for requisitada:
+        # Registra url capturado em tabela do dynamo, se tal ação for requisitada.
+        # Isso acontece no caso da captura de matérias do DOU. O motivo para 
+        # guardarmos quais matérias foram baixadas é que as matérias podem ser 
+        # publicadas em horários diferentes e o site do DOU pode sair do ar.
+        # Para não perder nenhuma matéria, vamos registrando quais do dia de hoje 
+        # já baixamos:
         if 'url_list' in event['aux_data'].keys():
             if status_code_gcp == 200:
                 if debug:
@@ -355,6 +398,8 @@ def get_and_save(params, event):
 
         # TODO: colocar como lidar com erros no GET.
     
+    # Retorna a resposta do http GET para poder pegar as próximas levas (páginas)
+    # dos dados, caso eles estejam paginados (como é o caso da API da câmara):
     return response
     
 
@@ -400,14 +445,23 @@ def get_next_page(event, response):
 def call_next_step(params):
     """
     According to the configuration in params:
-    -- Copy downloaded file from S3 to Google storage (deactivated, passed to outside);
     -- If this is the last entry in dynamo temp table, finish and delete temp table;
-    -- Else, restart the process with lower order (next GET target).
+    -- Else, restart the process (call Lambda 'http-request') with lower order
+       (order = order - 1)
+    (next GET target).
+    
+    Sample input
+    ------------
+    
+    params : dict
+        {'dynamo_table_name': 'temp-capture-camara-tramitacoes-live-2020-06-23-16-30-26', 'order': 5}
+        (DynamoDB temp table and Item's key 'order').
     """
     
+    # Instantiate a Lambda client (to call a Lambda function):
     lambd = boto3.client('lambda')
     
-    # check if loop is done
+    # If this is the last Item, delete temp table:
     if params['order'] <= 0:
         
         # debug:
@@ -416,15 +470,16 @@ def call_next_step(params):
         if debug:
             print('Deleting DynamoDB')
         
-        # call delete dynamodb table (temp)
+        # Call delete dynamodb table (temp):
         lambd.invoke(
             FunctionName='arn:aws:lambda:us-east-1:085250262607:function:dynamodb-delete-table:JustLambda',
             InvocationType='Event',
             Payload=json.dumps(params))    
     
+    # If this is not the last Item in the dynamoDB table, get the next one.
     else:
          
-        # call next lambda
+        # Get next item key:
         params['order'] = params['order'] - 1
         
         if debug:
@@ -443,25 +498,67 @@ def call_next_step(params):
             
 def lambda_handler(params, context):
     """
-    Downloads the files in dynamo's temp table described in config file 
-    params.
+    Downloads the data mentioned in an Item identified by the key 'order' of a 
+    DynamoDB's temp table (created by Lambda function 'parametrize-API-requests').
+    The temp table and 'order' are described in `params`. The data is saved 
+    to AWS S3 and Google Storage. In some rarer cases, the data is processed by 
+    python scripts in folder `external_modules` before saving it. 
+    
+    Sample Input
+    ------------
+    
+    params : dict
+        {'dynamo_table_name': 'temp-capture-camara-tramitacoes-live-2020-06-23-16-30-26', 'order': 5}
+        (the dict containing the DynamoDB temp table and the Item's key 'order')
+    
+        For testing purposes, the `params` input can be the dict that would be stored 
+        in a DynamoDB table item, directly, e.g.:
+        
+        {"aux_data": {},
+        "bucket": "brutos-publicos",
+        "data_path": ["dados"],
+        "data_type": "external_module",
+        "exclude_keys": None,
+        "headers": {},
+        "key": "legislativo/camara/scrapping/comissionados/camara-deputados-comissionados_id=137070&ano=2020&mes=6.json",
+        "name": "camara-deputados-comissionados",
+        "order": 0,
+        "params": {},
+        "records_keys": None,
+        "url": "https://www.camara.leg.br/deputados/137070/pessoal-gabinete?ano=2020"}
+    
+    context : empty dict 
+        {} (not used)
     """
     
     print(params)
     
-    # Para poder pegar os erros que acontecerão no dynamo:
+    # Para poder identificar os erros que acontecerão no dynamo:
     dynamo_exceptions = boto3.client('dynamodb').exceptions
         
     try:
-        if debug:
-            print('Loading params...')
-        # Carrega dicionário do dynamo:
-        event = load_params(params)
+        # Input `params` default (temp table):
+        if 'dynamo_table_name' in params.keys():           
+            if debug:
+                print('Loading params from dynamo temp table...')
+            # Carrega dicionário do dynamo:
+            event = load_params(params)
+        # For debugging:
+        else:
+            if debug:
+                print('Assuming `params` is a typical data in dynamo temp table item.')
+            # Se não existe referência à tabela no dynamo, assume que esse é o próprio dicionário
+            # (opção para debugging):
+            event = params
+            params = {'order': 0}
 
         # Download data and save it to AWS and GCP:
         response  = get_and_save(params, event)
+        
+        # A API dos dados abertos da Câmara retorna os dados paginados (máximo de 
+        # 100 dados por vez, se não me engano. Se for esse caso, pega próximas
+        # páginas até esgotar os dados solicitados:
         next_page = get_next_page(event, response)
-
         # While there are more pages, get it and repeat the capture process:
         while next_page != None:
             # Update event for next page:
@@ -472,14 +569,18 @@ def lambda_handler(params, context):
             response  = get_and_save(params, event)
             next_page = get_next_page(event, response) 
     
+    # Possível erro: não encontrou a tabela temp no DynamoDB:
     except dynamo_exceptions.ResourceNotFoundException:
         
         print('DynamoDB Table does not exist')    
         return # force exit 
     
+    # Algum outro possível erro:
     except Exception as e:
         
         # Raise error somewhere, maybe slack
         print(e)
 
+    # A função abaixo chama este Lambda recursivamente, reduzindo o key 'order',
+    # até esgotar todos os arquivos listados na tabela temp do DynamoDB:
     call_next_step(params)
