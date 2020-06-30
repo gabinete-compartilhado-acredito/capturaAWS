@@ -60,7 +60,7 @@
   "name": "classify_reqs_camara"
  },
  {
-  "capture_type": "test",
+  "capture_type": "daily_9am",
   "output_data": {
    "bucket": "brutos-publicos",
    "type": "s3_gcp_file",

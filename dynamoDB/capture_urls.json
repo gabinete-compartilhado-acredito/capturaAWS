@@ -1379,6 +1379,33 @@
  {
   "parameters": [
    {
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "date"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DATE_FORMAT(CURRENT_TIMESTAMP AT TIME ZONE 'UTC-3', '%(date_format)s') AS date"
+   }
+  ],
+  "data_path": [],
+  "capture_type": "monthly",
+  "requests_pars": {
+   "sep_row": "\r\n",
+   "skip_rows": 1,
+   "sep_col": ";"
+  },
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/v1/pessoas/comissionados/",
+  "url": "http://www.senado.gov.br/transparencia/LAI/secrh/servidores_comissionados_csv.csv",
+  "headers": {},
+  "name": "senado-pessoas-comissionados",
+  "data_type": "csv"
+ },
+ {
+  "parameters": [
+   {
     "query_config": {},
     "url_params": [
      "id",
