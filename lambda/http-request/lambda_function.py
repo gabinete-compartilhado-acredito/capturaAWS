@@ -110,19 +110,37 @@ def postprocessor(path, key, value):
     return re.sub(r'[\W_]+', u'', key, flags=re.UNICODE), value
 
 
+def remove_accents(string, i=0):
+    """
+    Input: string
+    
+    Returns the same string, but without all portuguese-valid accents.
+    """
+    accent_list = [('Ç','C'),('Ã','A'),('Á','A'),('À','A'),('Â','A'),('É','E'),('Ê','E'),('Í','I'),('Õ','O'),('Ó','O'),
+                   ('Ô','O'),('Ú','U'),('Ü','U'),('ç','c'),('ã','a'),('á','a'),('à','a'),('â','a'),('é','e'),('ê','e'),
+                   ('í','i'),('õ','o'),('ó','o'),('ô','o'),('ú','u'),('ü','u')]
+    if i >= len(accent_list):
+        return string
+    else:
+        string = string.replace(*accent_list[i])
+        return remove_accents(string, i + 1)
+    
 def parse_csv(response, sep_col, sep_row, skip_rows):
     """ This function get a csv and transform it in a list of dictionaries.
     sep_col -> string to split the columns
     sep_row -> string to split the rows
     skip_rows -> number of rows to skip from beginner """
 
-    linhas = response.text.split(sep_row)[skip_rows+1:]
+    lines = response.text.split(sep_row)[skip_rows + 1:]
     header = response.text.split(sep_row)[skip_rows].split(sep_col)
-    header = [item.strip() for item in header]
+    # Remove acentos e substitui espaços por underline no header
+    header = [remove_accents(item).strip().replace(' ', '_') for item in header]
     final = []
-    for linha in linhas:
-        linha = linha.split(';')
-        entrada = dict(zip(header, linha))
+    for line in lines:
+        line = line.split(';')
+        # remove espaços demasiados no fim dos itens da ultima coluna
+        line[-1] = line[-1].strip()
+        entrada = dict(zip(header, line))
         final.append(entrada)
     return final
 

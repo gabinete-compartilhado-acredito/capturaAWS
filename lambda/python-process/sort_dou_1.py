@@ -9,7 +9,7 @@ def sel_dou_1(input_data):
     Use hard-coded criteria to pre-select articles from DOU section 1.
     Input and output are Pandas DataFrames.
     """
-    identifica_regex = '(?:portaria|decreto|resolu|medida provisória)'
+    identifica_regex = '(?:portaria|decreto|resolu|medida provisória|lei )'
     veto_orgao_regex = '(?:universidade|instituto federal|superintendência regional|superintendência estadual|colégio|coordenação de processos migratórios|secretaria de fomento e incentivo à cultura|departamento de radiodifusão comercial)'
     veto_orgao_root  = ['Conselho Nacional do Ministério Público',
                         'Entidades de Fiscalização do Exercício das Profissões Liberais', 
