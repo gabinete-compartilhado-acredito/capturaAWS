@@ -601,12 +601,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 13349,
+            "CodeSize": 13603,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 640,
-            "LastModified": "2020-06-24T14:27:21.510+0000",
-            "CodeSha256": "p+It2zVed7Y0BF7qp33+pzQNCmFnKGz0GsRji7rpbc8=",
+            "LastModified": "2020-07-01T19:57:47.706+0000",
+            "CodeSha256": "iR/9QWwKzYDZGcEC154XLn65yywRIBpIdXWqTsHoiCc=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -616,7 +616,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "14f38659-4bee-4298-a8da-0f4c6e9fbbdc",
+            "RevisionId": "36a47e22-4ce2-44d4-8248-71a18270405c",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:http-request_Core:1",

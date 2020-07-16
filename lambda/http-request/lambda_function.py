@@ -12,7 +12,7 @@ sys.path.insert(0, "external_modules")
 import importlib
 
 # For debugging (print out more comments during execution):
-debug = False
+debug = True
 # To run it locally (not in AWS), set to True:
 local = False
 
@@ -110,23 +110,45 @@ def postprocessor(path, key, value):
     return re.sub(r'[\W_]+', u'', key, flags=re.UNICODE), value
 
 
+def parse_csv(response, sep_col, sep_row, skip_rows):
+    """ This function get a csv and transform it in a list of dictionaries.
+    sep_col -> string to split the columns
+    sep_row -> string to split the rows
+    skip_rows -> number of rows to skip from beginner """
+
+    linhas = response.text.split(sep_row)[skip_rows+1:]
+    header = response.text.split(sep_row)[skip_rows].split(sep_col)
+    header = [item.strip() for item in header]
+    final = []
+    for linha in linhas:
+        linha = linha.split(';')
+        entrada = dict(zip(header, linha))
+        final.append(entrada)
+    return final
+
+
 def load_as_json(event, response):
     """
-    Se esperamos um json na response (a espera é especificada 
+    Se esperamos um json na response (a espera é especificada
     no event), retorna o json; se for xml, converte para dicionário.
     """
-    
+
     if event['data_type'] == 'json':
         data = response.json()
 
     elif event['data_type'] == 'xml':
         data = xmltodict.parse(response.text, postprocessor=postprocessor)
     # Resposta padrão: dicionário vazio.
+
+    elif event['data_type'] == 'csv':
+        data = parse_csv(response, event['requests_pars']["sep_col"], 
+            event['requests_pars']["sep_row"], event['requests_pars']["skip_rows"])
+
     else:
         data = {}
-    
-    return data
 
+    return data
+    
 
 def filter_data(event, data):
     """
