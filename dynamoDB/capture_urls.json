@@ -615,17 +615,17 @@
      "id",
      "data_ini",
      "data_fim",
-     "twitter"
+     "twitter_id"
     ],
     "type": "bigquery",
-    "query": "SELECT id, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_ini, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_fim, perfil_twitter FROM `gabinete-compartilhado.bruto_gabinete_administrativo.perfil_twitter_deputado`"
+    "query": "SELECT Codigo_Parlamentar AS id, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_ini, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_fim, twitter_id FROM `gabinete-compartilhado.redes_sociais.perfil_twitter_deputados`"
    }
   ],
   "data_path": [],
   "capture_type": "daily",
   "bucket": "brutos-publicos",
-  "key": "legislativo/camara/scrapping/twitter/",
-  "url": "%(twitter)s",
+  "key": "legislativo/camara/scrapping/twitter_v2/",
+  "url": "%(twitter_id)s",
   "headers": {},
   "name": "camara-deputados-tweets",
   "data_type": "external_module"
@@ -633,22 +633,24 @@
  {
   "parameters": [
    {
-    "query_config": {},
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
     "url_params": [
      "id",
      "data_ini",
      "data_fim",
-     "twitter"
+     "twitter_id"
     ],
     "type": "bigquery",
-    "query": "SELECT id, '2019-02-01' AS data_ini, '2020-02-26' AS data_fim, perfil_twitter FROM `gabinete-compartilhado.bruto_gabinete_administrativo.perfil_twitter_deputado`"
+    "query": "SELECT Codigo_Parlamentar AS id, '2020-06-01' AS data_ini, '2020-07-31' AS data_fim, twitter_id FROM `gabinete-compartilhado.redes_sociais.perfil_twitter_deputados`"
    }
   ],
   "data_path": [],
   "capture_type": "historical",
   "bucket": "brutos-publicos",
-  "key": "legislativo/camara/scrapping/twitter/",
-  "url": "%(twitter)s",
+  "key": "legislativo/camara/scrapping/twitter_v2/",
+  "url": "%(twitter_id)s",
   "headers": {},
   "name": "camara-deputados-tweets",
   "data_type": "external_module"
@@ -935,6 +937,31 @@
   },
   "name": "senado-lista-atual",
   "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "id",
+     "data_ini",
+     "data_fim",
+     "twitter_id"
+    ],
+    "type": "bigquery",
+    "query": "SELECT CodigoParlamentar AS id, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_ini, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_fim, twitter_id FROM `gabinete-compartilhado.redes_sociais.perfil_twitter_senadores`"
+   }
+  ],
+  "data_path": [],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/scrapping/twitter_v2/",
+  "url": "%(twitter_id)s",
+  "headers": {},
+  "name": "senado-senadores-tweets",
+  "data_type": "external_module"
  },
  {
   "parameters": [

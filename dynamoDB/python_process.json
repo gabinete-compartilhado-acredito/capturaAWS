@@ -69,7 +69,7 @@
   },
   "code": {
    "bucket": "config-lambda",
-   "key": "models/dou-2_sorter_ensemble_2020-06-08/production_model.joblib"
+   "key": "models/dou-2_sorter_ensemble_2020-07-25/production_model.joblib"
   },
   "input_data": {
    "bucket": "brutos-publicos",
@@ -123,7 +123,7 @@
   },
   "code": {
    "bucket": "config-lambda",
-   "key": "models/dou-1_sorter_ridge_2020-05-07/production_model.joblib"
+   "key": "models/dou-1_sorter_ridge_2020-07-23/production_model.joblib"
   },
   "input_data": {
    "bucket": "brutos-publicos",

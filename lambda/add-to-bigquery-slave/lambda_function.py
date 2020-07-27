@@ -161,7 +161,7 @@ def save_raw_data_to_local_GCP(temp_data, bucket, prefix):
     b = gcp_storage.get_bucket(bucket)
     blob_iterator = b.list_blobs(prefix=prefix)  
     for i, obj in enumerate(blob_iterator):
-        if i > 100:
+        if i > 500:
             print('breaking')
             break
     
@@ -186,7 +186,7 @@ def save_raw_data_to_local_AWS(temp_data, bucket, prefix):
     open(temp_data, 'w').write('')
     # print(client.list_objects_v2(Bucket=bucket,Prefix=prefix))
     for i, obj in enumerate(client.list_objects_v2(Bucket=bucket, Prefix=prefix)['Contents']):
-        if i > 100:
+        if i > 500:
             print('breaking')
             break
     
@@ -213,7 +213,7 @@ def save_raw_data_to_local_local(temp_data, bucket, prefix, max_bytes):
 
     file_list = glob(prefix + '*')
     for i, file in enumerate(file_list):
-        if i > 100:
+        if i > 500:
             print('breaking')
             break
 
