@@ -107,8 +107,8 @@
    ],
    "type": "s3_njson",
    "key": [
-    "executivo/federal/dou/%(today)s_s2",
-    "executivo/federal/dou/%(yesterday)s_se"
+    "executivo/federal/dou-partitioned/part_data_pub=%(today)s/part_secao=2/",
+    "executivo/federal/dou-partitioned/part_data_pub=%(yesterday)s/part_secao=e/"
    ]
   },
   "name": "sort_dou_2"
@@ -161,8 +161,8 @@
    ],
    "type": "s3_njson",
    "key": [
-    "executivo/federal/dou/%(today)s_s1",
-    "executivo/federal/dou/%(yesterday)s_se"
+    "executivo/federal/dou-partitioned/part_data_pub=%(today)s/part_secao=1/",
+    "executivo/federal/dou-partitioned/part_data_pub=%(yesterday)s/part_secao=e/"
    ]
   },
   "name": "sort_dou_1"

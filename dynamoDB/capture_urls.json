@@ -89,7 +89,7 @@
   "parallel_batches": 5,
   "capture_type": "historical",
   "bucket": "brutos-publicos",
-  "key": "executivo/federal/dou/",
+  "key": "executivo/federal/dou-partitioned/",
   "headers": {},
   "name": "executivo-federal-dou",
   "data_type": "external_module"
@@ -109,7 +109,7 @@
   "data_path": [],
   "capture_type": "live",
   "bucket": "brutos-publicos",
-  "key": "executivo/federal/dou/",
+  "key": "executivo/federal/dou-partitioned/",
   "headers": {},
   "name": "executivo-federal-dou",
   "data_type": "external_module"
@@ -139,7 +139,7 @@
   "data_path": [],
   "capture_type": "now",
   "bucket": "brutos-publicos",
-  "key": "executivo/federal/dou/",
+  "key": "executivo/federal/dou-partitioned/",
   "headers": {},
   "name": "executivo-federal-dou",
   "data_type": "external_module"
@@ -169,7 +169,7 @@
   "data_path": [],
   "capture_type": "yesterday",
   "bucket": "brutos-publicos",
-  "key": "executivo/federal/dou/",
+  "key": "executivo/federal/dou-partitioned/",
   "headers": {},
   "name": "executivo-federal-dou",
   "data_type": "external_module"
