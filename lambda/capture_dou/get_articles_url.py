@@ -47,7 +47,10 @@ def get_artigos_do(data, secao):
     session.mount('http://www.in.gov.br', requests.adapters.HTTPAdapter(max_retries=3))
     
     # Captura a lista de artigos daquele dia e seção:
-    res   = session.get(url, timeout=10)
+    try:
+        res = session.get(url, timeout=10)
+    except requests.exceptions.SSLError:
+        res = session.get(url, timeout=10, verify=False)
     if res.status_code != 200:
         raise Exception('http GET request failed with code '+str(res.status_code)+'!')
     tree  = html.fromstring(res.content)

@@ -248,6 +248,37 @@ def save_raw_data_to_local(temp_data, bucket, prefix, max_bytes):
         else:
             save_raw_data_to_local_GCP(temp_data, bucket, prefix)
 
+
+def schema_crawl_to_str(schema, replace_time_types, extra_types):
+    """
+    Replace variable types listed in `extra_types`, along with 
+    time/date types, by STRING. Do it recursively for nested data.
+    (In place).
+    
+    Input
+    -----
+    
+    schema : list of dicts
+        The schema describing BigQuery columns.
+    
+    replace_time_types : bool
+        Should be True
+       
+    extra_types : list of str
+        List of types (besides date/time times) that should be
+        set to string.
+    """
+    if replace_time_types:
+        time_types = ['TIMESTAMP', 'DATE', 'TIME',] + extra_types
+    
+    for element in schema:
+        if element['type'] == 'RECORD':
+            # Recursive:
+            schema_crawl_to_str(element['fields'], replace_time_types, extra_types)
+        elif element['type'] in time_types:
+            element['type'] = 'STRING'
+            
+            
 def generate_schema(temp_data, replace_time_types=True, extra_types=[]):
     """
     Generate BigQuery schema by first using BigQuery SchemaGenerator and 
@@ -269,18 +300,14 @@ def generate_schema(temp_data, replace_time_types=True, extra_types=[]):
         schema_map, error_logs = generator.deduce_schema(f)
     schema = generator.flatten_schema(schema_map)
     
-    if replace_time_types:
-        time_types = ['TIMESTAMP', 'DATE', 'TIME',] + extra_types
-
-        for column in schema:
-            # if column['type'] == 'RECORD'
-            if column['type'] in time_types:
-                column['type'] = 'STRING'
-                
+    # Set requested fields to string:
+    schema_crawl_to_str(schema, replace_time_types, extra_types)
+    
     print(schema)
     
     return list(map(lambda x: bigquery.SchemaField.from_api_repr(x), schema))
-
+    
+    
 def lambda_handler(event, context):
     
     RAW_DATA = '/tmp/raw.json'

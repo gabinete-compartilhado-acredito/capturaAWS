@@ -14,7 +14,7 @@ sys.path.insert(0, "external_modules")
 import importlib
 
 # Switch for printing messages to log:
-debug = False
+debug = True
 # Wheter this code is ran locally or on AWS:
 local = False
 

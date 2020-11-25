@@ -3,9 +3,9 @@
         {
             "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:add-to-bigquery-slave:PROD",
             "Name": "PROD",
-            "FunctionVersion": "6",
+            "FunctionVersion": "7",
             "Description": "",
-            "RevisionId": "331d9306-e872-49b6-848a-b771e25cd9b3"
+            "RevisionId": "01219a44-09e8-46e1-9a31-b41b5aab69e0"
         }
     ]
 }

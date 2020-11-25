@@ -42,7 +42,10 @@ def get_artigos_do(data, secao):
         session = requests.Session()
         session.mount('http://www.in.gov.br', requests.adapters.HTTPAdapter(max_retries=3))
         # GET html:
-        res   = session.get(url)
+        try:
+            res = session.get(url)
+        except requests.exceptions.SSLError:
+            res = session.get(url, verify=False)
         
         # Busca por local onde json de artigos está guardado:
         tree  = html.fromstring(res.content)

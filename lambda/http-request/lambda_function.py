@@ -394,10 +394,18 @@ def get_and_save(params, event):
     if 'url' in event.keys():
         if debug:
             print('GET file...')
-        response = session.get(event['url'], 
-                               params=event['params'], 
-                               headers=event['headers'], # configs para HTTP GET.
-                               timeout=30)
+        try:
+            response = session.get(event['url'], 
+                                   params=event['params'], 
+                                   headers=event['headers'], # configs para HTTP GET.
+                                   timeout=30)
+        except requests.exceptions.SSLError:
+            response = session.get(event['url'], 
+                                   params=event['params'], 
+                                   headers=event['headers'], # configs para HTTP GET.
+                                   timeout=30,
+                                   verify=False)
+
     # Algumas capturas (e.g. tweets) não possuem url. Nesse caso, apenas 
     # continua abaixo:
     else:
