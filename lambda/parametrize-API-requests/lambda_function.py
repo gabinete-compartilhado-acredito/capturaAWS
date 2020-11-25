@@ -71,10 +71,10 @@ def forms_bigquery(par, item, forms):
         
         # Create data destination filename:
         if len(d) > 1:
-            end_filename = '&'.join(map(lambda x: '='.join(map(str, x)), zip(par['url_params'], list(d.values()))))
+            end_filename = '/'.join(map(lambda x: '='.join(map(str, x)), zip(par['url_params'], list(d.values()))))
         else:
             end_filename = d.values()[0]
-        filename = '_'.join(map(str, [item['name'], end_filename])) + '.json'
+        filename = '/'.join(map(str, [item['name'], end_filename])) + '.json'
         
         # Create source url:    
         url = item['url'] % dict(zip(par['url_params'], list(d.values())))

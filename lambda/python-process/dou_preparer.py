@@ -86,6 +86,7 @@ def prepare_dou_df(input_data):
     """
     Transforms a Pandas DataFrame with DOU articles' data in place.
     """
+    
     # Clean text:
     input_data['fulltext']    = input_data.apply(lambda r: clean_text(r['identifica'], r['ementa'], r['fulltext']), axis=1)
     input_data['resumo']      = input_data['fulltext'].apply(create_resumo)

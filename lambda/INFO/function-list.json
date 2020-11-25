@@ -121,7 +121,7 @@
             "Description": "",
             "Timeout": 123,
             "MemorySize": 128,
-            "LastModified": "2020-03-30T19:40:46.676+0000",
+            "LastModified": "2020-11-25T19:05:00.936+0000",
             "CodeSha256": "ZJ2PjMJJoBM8TMkOf2Ez11/eE3szlXMEoSThs/9QdIU=",
             "Version": "$LATEST",
             "VpcConfig": {
@@ -132,7 +132,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "bd6a8a50-0f10-41c3-b253-510c55c7ebf5"
+            "RevisionId": "582f0a38-6d14-4d11-ac18-b77ce3fd54cb"
         },
         {
             "FunctionName": "capture-historical-camara",
@@ -233,12 +233,12 @@
             "Runtime": "python3.6",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 19842,
+            "CodeSize": 19880,
             "Description": "",
             "Timeout": 303,
-            "MemorySize": 832,
-            "LastModified": "2020-08-31T17:30:02.855+0000",
-            "CodeSha256": "1WCb7B8tO/5pNrPvF8LrXxhHZ5A4NBLc0vBhh0vZH/8=",
+            "MemorySize": 1024,
+            "LastModified": "2020-11-17T11:46:05.601+0000",
+            "CodeSha256": "dw9idU8kalIS0MRxdOnw00PeD/bcLR8DFy0JjEGgRVo=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -248,7 +248,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "2b82f2e1-9a99-4155-b92a-eca516895ad6",
+            "RevisionId": "d8a841ad-8f10-4aee-8e76-2997dc1a72e8",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:pandas:1",
@@ -278,12 +278,12 @@
             "Runtime": "python3.7",
             "Role": "arn:aws:iam::085250262607:role/lambda_basic_execution",
             "Handler": "lambda_function.lambda_handler",
-            "CodeSize": 11004,
+            "CodeSize": 11009,
             "Description": "",
             "Timeout": 900,
             "MemorySize": 128,
-            "LastModified": "2020-08-05T11:23:57.831+0000",
-            "CodeSha256": "JF7eq+HRPek8U/ASSfLXRn/YT3jSu1jSeU+U/OMjbfg=",
+            "LastModified": "2020-10-27T10:46:16.642+0000",
+            "CodeSha256": "s6u5zqZ/O8puvVpZSx6KLQrGNt0X1eOyuLhNBXBS5fE=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -298,7 +298,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "469ffb0f-b9eb-40a8-b787-16fd390d608f",
+            "RevisionId": "b65e4e9f-3934-4f26-affd-cf1db95bd823",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:dynamodb-json:1",
@@ -605,8 +605,8 @@
             "Description": "",
             "Timeout": 900,
             "MemorySize": 640,
-            "LastModified": "2020-08-05T11:22:09.490+0000",
-            "CodeSha256": "DVDzs0Wf+vIjnEGkfXH/OJiLXp6++VBhp9oOSP0vwUI=",
+            "LastModified": "2020-10-27T10:45:43.411+0000",
+            "CodeSha256": "K9AVsoVyBC/+uq0DI0IAgzoOkvFbo1d4Dq8e03lYXGQ=",
             "Version": "$LATEST",
             "VpcConfig": {
                 "SubnetIds": [],
@@ -616,7 +616,7 @@
             "TracingConfig": {
                 "Mode": "PassThrough"
             },
-            "RevisionId": "439b796f-9722-4eec-93f3-f304ef22fd1d",
+            "RevisionId": "3b389a8b-5cf7-4d47-a989-e649d02127da",
             "Layers": [
                 {
                     "Arn": "arn:aws:lambda:us-east-1:085250262607:layer:http-request_Core:1",

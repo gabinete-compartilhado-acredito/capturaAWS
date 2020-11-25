@@ -314,6 +314,9 @@ def pandas_to_njson(df):
     Given a Pandas DataFrame `df`, transform it to newline-elimited JSON 
     and add a key 'process_date' with the current date and time as value.
     """
+    
+    #df['secao'] = df['secao'].astype(int)
+    
     records   = df.to_dict(orient='records')
     json_list = [json.dumps(add_process_date(record), ensure_ascii=False) for record in records]
     njson     = '\n'.join(json_list)
@@ -371,10 +374,12 @@ def lambda_handler(event, context):
     config = defaultdict(lambda: None, response['Item'])
 
     # Load model:
-    if debug:
-        print('Load code...')
     if config['code'] != None:
+        if debug:
+            print('Save code to temp file...')
         code_file = save_to_tmp(config['code']['bucket'], config['code']['key'], string=False)
+        if debug:
+            print('Load code...')
         code = joblib.load(code_file)
 
     # Load data:

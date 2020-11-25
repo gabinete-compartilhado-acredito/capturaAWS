@@ -60,7 +60,61 @@
   "name": "classify_reqs_camara"
  },
  {
-  "capture_type": "daily_9am",
+  "capture_type": "historical",
+  "output_data": {
+   "bucket": "brutos-publicos",
+   "type": "s3_gcp_file",
+   "key": "executivo/federal/ranked_dou/2020-10-15_s2_2020-10-14_se.json",
+   "key_pars": []
+  },
+  "code": {
+   "bucket": "config-lambda",
+   "key": "models/dou-2_sorter_ensemble_2020-07-25/production_model.joblib"
+  },
+  "input_data": {
+   "bucket": "brutos-publicos",
+   "honorary_list": [
+    "url",
+    "url_certificado",
+    "capture_date"
+   ],
+   "col_names": [
+    "identifica",
+    "orgao",
+    "ementa",
+    "fulltext",
+    "secao",
+    "edicao",
+    "pagina",
+    "data_pub",
+    "assina",
+    "cargo",
+    "url",
+    "url_certificado",
+    "capture_date"
+   ],
+   "key_list": [
+    "identifica",
+    "orgao-dou-data",
+    "ementa",
+    "fulltext",
+    "secao-dou",
+    "edicao-dou-data",
+    "secao-dou-data",
+    "publicado-dou-data",
+    "assina",
+    "cargo"
+   ],
+   "type": "s3_njson",
+   "key": [
+    "executivo/federal/dou-partitioned/part_data_pub=2020-10-15/part_secao=2/",
+    "executivo/federal/dou-partitioned/part_data_pub=2020-10-14/part_secao=e/"
+   ]
+  },
+  "name": "sort_dou_2"
+ },
+ {
+  "capture_type": "off_daily_9am",
   "output_data": {
    "bucket": "brutos-publicos",
    "type": "s3_gcp_file",
@@ -114,7 +168,61 @@
   "name": "sort_dou_2"
  },
  {
-  "capture_type": "daily_9am",
+  "capture_type": "historical",
+  "output_data": {
+   "bucket": "brutos-publicos",
+   "type": "s3_gcp_file",
+   "key": "executivo/federal/ranked_dou/2020-10-15_s1_2020-10-14_se.json",
+   "key_pars": []
+  },
+  "code": {
+   "bucket": "config-lambda",
+   "key": "models/dou-1_sorter_ridge_2020-11-16/production_model.joblib"
+  },
+  "input_data": {
+   "bucket": "brutos-publicos",
+   "honorary_list": [
+    "url",
+    "url_certificado",
+    "capture_date"
+   ],
+   "col_names": [
+    "identifica",
+    "orgao",
+    "ementa",
+    "fulltext",
+    "secao",
+    "edicao",
+    "pagina",
+    "data_pub",
+    "assina",
+    "cargo",
+    "url",
+    "url_certificado",
+    "capture_date"
+   ],
+   "key_list": [
+    "identifica",
+    "orgao-dou-data",
+    "ementa",
+    "fulltext",
+    "secao-dou",
+    "edicao-dou-data",
+    "secao-dou-data",
+    "publicado-dou-data",
+    "assina",
+    "cargo"
+   ],
+   "type": "s3_njson",
+   "key": [
+    "executivo/federal/dou-partitioned/part_data_pub=2020-10-15/part_secao=1/",
+    "executivo/federal/dou-partitioned/part_data_pub=2020-10-14/part_secao=e/"
+   ]
+  },
+  "name": "sort_dou_1"
+ },
+ {
+  "capture_type": "off_daily_9am",
   "output_data": {
    "bucket": "brutos-publicos",
    "type": "s3_gcp_file",
@@ -123,7 +231,7 @@
   },
   "code": {
    "bucket": "config-lambda",
-   "key": "models/dou-1_sorter_ridge_2020-07-23/production_model.joblib"
+   "key": "models/dou-1_sorter_ridge_2020-11-16/production_model.joblib"
   },
   "input_data": {
    "bucket": "brutos-publicos",

@@ -68,15 +68,12 @@
   "parameters": [
    {
     "params": {
-     "end_date": "2020-03-30",
+     "end_date": "2020-10-20",
      "debug": false,
-     "timedelta": 0,
+     "timedelta": -8,
      "date_format": "%Y-%m-%d",
      "save_articles": true,
      "secao": [
-      1,
-      2,
-      3,
       "e"
      ],
      "use_config": false,
@@ -612,17 +609,17 @@
      "date_format": "%Y-%m-%d"
     },
     "url_params": [
-     "id",
      "data_ini",
      "data_fim",
+     "camara_id",
      "twitter_id"
     ],
     "type": "bigquery",
-    "query": "SELECT Codigo_Parlamentar AS id, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_ini, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_fim, twitter_id FROM `gabinete-compartilhado.redes_sociais.perfil_twitter_deputados`"
+    "query": "SELECT '2020-06-01' AS data_ini, '2020-06-10' AS data_fim, Codigo_Parlamentar AS camara_id, twitter_id FROM `gabinete-compartilhado.redes_sociais.perfil_twitter_deputados`"
    }
   ],
   "data_path": [],
-  "capture_type": "daily",
+  "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/scrapping/twitter_v2/",
   "url": "%(twitter_id)s",
@@ -637,23 +634,71 @@
      "date_format": "%Y-%m-%d"
     },
     "url_params": [
-     "id",
      "data_ini",
      "data_fim",
+     "camara_id",
      "twitter_id"
     ],
     "type": "bigquery",
-    "query": "SELECT Codigo_Parlamentar AS id, '2020-06-01' AS data_ini, '2020-07-31' AS data_fim, twitter_id FROM `gabinete-compartilhado.redes_sociais.perfil_twitter_deputados`"
+    "query": "SELECT FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_ini, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_fim, Codigo_Parlamentar AS camara_id, twitter_id FROM `gabinete-compartilhado.redes_sociais.perfil_twitter_deputados`"
    }
   ],
   "data_path": [],
-  "capture_type": "historical",
+  "capture_type": "off",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/scrapping/twitter_v2/",
   "url": "%(twitter_id)s",
   "headers": {},
   "name": "camara-deputados-tweets",
   "data_type": "external_module"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT id, data FROM camara_v2.votacoes WHERE date_diff('day', date_parse(data, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format)s'), '%(date_format)s')) <= 2"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/votacoes-orientacoes/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/votacoes/%(id)s/orientacoes",
+  "headers": {},
+  "name": "camara-votacoes-orientacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT id, data FROM camara_v2.votacoes WHERE date_parse(data, '%(date_format)s') > date_parse('2019-01-01', '%(date_format)s')"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/votacoes-orientacoes/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/votacoes/%(id)s/orientacoes",
+  "headers": {},
+  "name": "camara-votacoes-orientacoes",
+  "data_type": "json"
  },
  {
   "parameters": [
@@ -730,6 +775,54 @@
  {
   "parameters": [
    {
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT id, data FROM camara_v2.votacoes WHERE date_diff('day', date_parse(data, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format)s'), '%(date_format)s')) <= 2"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/votacoes-votos/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/votacoes/%(id)s/votos",
+  "headers": {},
+  "name": "camara-votacoes-votos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT id, data FROM camara_v2.votacoes WHERE date_parse(data, '%(date_format)s') > date_parse('2019-01-01', '%(date_format)s')"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/votacoes-votos/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/votacoes/%(id)s/votos",
+  "headers": {},
+  "name": "camara-votacoes-votos",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
     "query_config": {},
     "url_params": [
      "id"
@@ -797,7 +890,7 @@
    {
     "name": "id",
     "body": {
-     "from": 2019,
+     "from": 2020,
      "to": 2020
     },
     "type": "from_to"
@@ -955,7 +1048,7 @@
    }
   ],
   "data_path": [],
-  "capture_type": "daily",
+  "capture_type": "off",
   "bucket": "brutos-publicos",
   "key": "legislativo/senado/scrapping/twitter_v2/",
   "url": "%(twitter_id)s",
@@ -1072,6 +1165,50 @@
  {
   "parameters": [
    {
+    "name": "year",
+    "body": {
+     "from": 2020,
+     "to": 2020
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/votacoes/",
+  "url": "https://dadosabertos.camara.leg.br/arquivos/votacoes/json/votacoes-%(year)s.json",
+  "headers": {},
+  "name": "camara-votacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "name": "year",
+    "body": {
+     "from": 1995,
+     "to": 2019
+    },
+    "type": "from_to"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/votacoes/",
+  "url": "https://dadosabertos.camara.leg.br/arquivos/votacoes/json/votacoes-%(year)s.json",
+  "headers": {},
+  "name": "camara-votacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
     "query_config": {},
     "url_params": [
      "id"
@@ -1142,7 +1279,7 @@
    {
     "name": "id",
     "body": {
-     "from": 2019,
+     "from": 2020,
      "to": 2020
     },
     "type": "from_to"
@@ -1248,7 +1385,7 @@
    {
     "name": "id",
     "body": {
-     "from": 2019,
+     "from": 2020,
      "to": 2020
     },
     "type": "from_to"
@@ -1510,6 +1647,33 @@
  {
   "parameters": [
    {
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "date"
+    ],
+    "type": "athena_query",
+    "query": "SELECT DATE_FORMAT(CURRENT_TIMESTAMP AT TIME ZONE 'UTC-3', '%(date_format)s') AS date"
+   }
+  ],
+  "data_path": [],
+  "capture_type": "monthly",
+  "requests_pars": {
+   "sep_row": "\r\n",
+   "skip_rows": 1,
+   "sep_col": ";"
+  },
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/v1/pessoas/servidores/",
+  "url": "http://www.senado.gov.br/transparencia/LAI/secrh/todos_csv.csv",
+  "headers": {},
+  "name": "senado-pessoas-servidores",
+  "data_type": "csv"
+ },
+ {
+  "parameters": [
+   {
     "type": "empty"
    }
   ],
@@ -1529,7 +1693,7 @@
    {
     "name": "year",
     "body": {
-     "from": 2019,
+     "from": 2020,
      "to": 2020
     },
     "type": "from_to"
@@ -1582,6 +1746,54 @@
    "Accept": "application/json"
   },
   "name": "senado-votacoes-plenario",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT id, data FROM camara_v2.votacoes WHERE date_diff('day', date_parse(data, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format)s'), '%(date_format)s')) <= 2"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/votacoes-detalhes/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/votacoes/%(id)s",
+  "headers": {},
+  "name": "camara-votacoes-detalhes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT id, data FROM camara_v2.votacoes WHERE date_parse(data, '%(date_format)s') > date_parse('2019-01-01', '%(date_format)s')"
+   }
+  ],
+  "data_path": [
+   "dados"
+  ],
+  "capture_type": "historical",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/camara/v2/votacoes-detalhes/",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/votacoes/%(id)s",
+  "headers": {},
+  "name": "camara-votacoes-detalhes",
   "data_type": "json"
  },
  {
