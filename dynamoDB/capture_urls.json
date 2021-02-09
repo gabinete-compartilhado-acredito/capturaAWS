@@ -686,7 +686,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT id, data FROM camara_v2.votacoes WHERE date_parse(data, '%(date_format)s') > date_parse('2019-01-01', '%(date_format)s')"
+    "query": "SELECT id, data FROM camara_v2.votacoes WHERE date_parse(data, '%(date_format)s') > date_parse('2015-01-01', '%(date_format)s') AND date_parse(data, '%(date_format)s') <= date_parse('2019-01-01', '%(date_format)s')"
    }
   ],
   "data_path": [
@@ -806,7 +806,7 @@
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT id, data FROM camara_v2.votacoes WHERE date_parse(data, '%(date_format)s') > date_parse('2019-01-01', '%(date_format)s')"
+    "query": "SELECT id, data FROM camara_v2.votacoes WHERE date_parse(data, '%(date_format)s') > date_parse('2015-01-01', '%(date_format)s') AND date_parse(data, '%(date_format)s') <= date_parse('2019-01-01', '%(date_format)s')"
    }
   ],
   "data_path": [
@@ -890,8 +890,8 @@
    {
     "name": "id",
     "body": {
-     "from": 2020,
-     "to": 2020
+     "from": 2021,
+     "to": 2021
     },
     "type": "from_to"
    }
@@ -1069,7 +1069,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v1/proposicoes-votadas-plenario/",
-  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2020&tipo=",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2021&tipo=",
   "headers": {},
   "name": "camara-proposicoes-votadas-plenario",
   "data_type": "xml"
@@ -1167,8 +1167,8 @@
    {
     "name": "year",
     "body": {
-     "from": 2020,
-     "to": 2020
+     "from": 2021,
+     "to": 2021
     },
     "type": "from_to"
    }
@@ -1279,8 +1279,8 @@
    {
     "name": "id",
     "body": {
-     "from": 2020,
-     "to": 2020
+     "from": 2021,
+     "to": 2021
     },
     "type": "from_to"
    }
@@ -1385,8 +1385,8 @@
    {
     "name": "id",
     "body": {
-     "from": 2020,
-     "to": 2020
+     "from": 2021,
+     "to": 2021
     },
     "type": "from_to"
    }
@@ -1693,8 +1693,8 @@
    {
     "name": "year",
     "body": {
-     "from": 2020,
-     "to": 2020
+     "from": 2021,
+     "to": 2021
     },
     "type": "from_to"
    }
@@ -1992,7 +1992,7 @@
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-eventos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/eventos?itens=100",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/eventos?dataInicio=2019-01-01&dataFim=2022-12-31&ordem=ASC&ordenarPor=dataHoraInicio&itens=100",
   "headers": {},
   "name": "camara-deputados-eventos",
   "data_type": "json"
@@ -2014,7 +2014,7 @@
   "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v2/deputados-eventos/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/eventos?itens=100",
+  "url": "https://dadosabertos.camara.leg.br/api/v2/deputados/%(id)s/eventos?dataInicio=2019-01-01&dataFim=2022-12-31&ordem=ASC&ordenarPor=dataHoraInicioitens=100",
   "headers": {},
   "name": "camara-deputados-eventos",
   "data_type": "json"
