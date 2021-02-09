@@ -282,11 +282,14 @@ def format_filters(filters_raw):
     
 def lambda_handler(event, context):
     
+    print('Starting bigquery-to-sns...')
+    
     # Load filters information from Google Sheets:
     #filters_raw = query_bigquery('SELECT * FROM `gabinete-compartilhado.gabi_bot.gabi_filters`')
     filters_raw = query_bigquery("SELECT * FROM `gabinete-compartilhado.gabi_bot.gabi_filters` WHERE casa != 'dou'")
     # Each entry in the list below is a bot_info:
     event = format_filters(filters_raw)
+    print('Loaded {} filters from Google sheets.'.format(len(event)))
 
     # Will get every new entry in BigQuery that appeared in the last 30min:
     queries_metadata = [

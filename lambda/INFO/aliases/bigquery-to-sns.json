@@ -3,9 +3,9 @@
         {
             "AliasArn": "arn:aws:lambda:us-east-1:085250262607:function:bigquery-to-sns:PROD",
             "Name": "PROD",
-            "FunctionVersion": "15",
+            "FunctionVersion": "16",
             "Description": "This alias is the one used to actually run gabi",
-            "RevisionId": "92f5fd82-aba4-4afe-b3e9-56e6dbc74de7"
+            "RevisionId": "6d8d9c01-95c8-4a30-9600-ccfab97fe20e"
         }
     ]
 }
