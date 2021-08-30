@@ -36,8 +36,8 @@ SIGNATURE_METHOD = 'PLAINTEXT'
 
 
 class OAuthError(RuntimeError):
-    """Generic exception class."""
-    def __init__(self, message='OAuth error occured.'):
+   """Generic exception class."""
+   def __init__(self, message='OAuth error occured.'):
         self.mymessage = message
 
 
@@ -70,7 +70,8 @@ def generate_nonce(length=8):
 
 
 class OAuthConsumer(object):
-    """Consumer of OAuth authentication.
+    """
+    Consumer of OAuth authentication.
 
     OAuthConsumer is a data type that represents the identity of the Consumer
     via its shared secret with the Service Provider.
@@ -85,7 +86,8 @@ class OAuthConsumer(object):
 
 
 class OAuthToken(object):
-    """OAuthToken is a data type that represents an End User via either an access
+    """
+    OAuthToken is a data type that represents an End User via either an access
     or request token.
 
     key -- the token
@@ -104,7 +106,8 @@ class OAuthToken(object):
                                        'oauth_token_secret': self.secret})
 
     def from_string(s):
-        """ Returns a token from something like:
+        """ 
+        Returns a token from something like:
         oauth_token_secret=xxx&oauth_token=xxx
         """
         params = cgi.parse_qs(s, keep_blank_values=False)
@@ -118,7 +121,8 @@ class OAuthToken(object):
 
 
 class OAuthRequest(object):
-    """OAuthRequest represents the request and can be serialized.
+    """
+    OAuthRequest represents the request and can be serialized.
 
     OAuth parameters:
         - oauth_consumer_key
@@ -135,8 +139,7 @@ class OAuthRequest(object):
     http_url = None
     version = VERSION
 
-    def __init__(self, http_method=HTTP_METHOD,
-                 http_url=None, parameters=None):
+    def __init__(self, http_method=HTTP_METHOD, http_url=None, parameters=None):
         self.http_method = http_method
         self.http_url = http_url
         self.parameters = parameters or {}
@@ -152,8 +155,7 @@ class OAuthRequest(object):
             raise OAuthError('Parameter not found: %s' % parameter)
 
     def _get_timestamp_nonce(self):
-        return self.get_parameter('oauth_timestamp'), self.get_parameter(
-            'oauth_nonce')
+        return self.get_parameter('oauth_timestamp'), self.get_parameter('oauth_nonce')
 
     def get_nonoauth_parameters(self):
         """Get any non-OAuth parameters."""
@@ -216,17 +218,18 @@ class OAuthRequest(object):
         return '%s://%s%s' % (scheme, netloc, path)
 
     def sign_request(self, signature_method, consumer, token):
-        """Set the signature parameter to the result of build_signature."""
+        """
+        Set the signature parameter to the result of build_signature.
+        """
         # Set the signature method.
-        self.set_parameter('oauth_signature_method',
-                           signature_method.get_name())
+        self.set_parameter('oauth_signature_method', signature_method.get_name())
         # Set the signature.
-        self.set_parameter('oauth_signature',
-                           self.build_signature(signature_method,
-                                                consumer, token))
+        self.set_parameter('oauth_signature', self.build_signature(signature_method, consumer, token))
 
     def build_signature(self, signature_method, consumer, token):
-        """Calls the build signature method within the signature method."""
+        """
+        Calls the build signature method within the signature method.
+        """
         return signature_method.build_signature(self, consumer, token)
 
     def from_request(http_method, http_url, headers=None,
@@ -265,27 +268,38 @@ class OAuthRequest(object):
         return None
     from_request = staticmethod(from_request)
 
-    def from_consumer_and_token(oauth_consumer, token=None,
-                                http_method=HTTP_METHOD, http_url=None,
-                                parameters=None):
+    @staticmethod
+    def from_consumer_and_token(oauth_consumer, token=None, http_method=HTTP_METHOD, http_url=None, parameters=None):
+        """
+        Add extra items to parameters: 
+            'oauth_consumer_key' (from `oauth_consumer`); 
+            'oauth_token' (from `token`);
+            'oauth_timestamp' (generated timestamp);
+            'oauth_nonce' (generated random number);
+            'oauth_version' (hard-coded). 
+
+        And return an OAuthRequest object with `http_method`, 
+        `http_url` and`this new `parameters`.
+        """
+        
+        # Adds OAuth entries to the provided parameters:
+        # Besides provided parameters, add timestamp, random number and hard-coded OAuth version: 
         if not parameters:
             parameters = {}
-
         defaults = {
             'oauth_consumer_key': oauth_consumer.key,
             'oauth_timestamp': generate_timestamp(),
             'oauth_nonce': generate_nonce(),
             'oauth_version': OAuthRequest.version,
         }
-
         defaults.update(parameters)
         parameters = defaults
-
+        # Set token parameter if provided:
         if token:
             parameters['oauth_token'] = token.key
 
         return OAuthRequest(http_method, http_url, parameters)
-    from_consumer_and_token = staticmethod(from_consumer_and_token)
+    #from_consumer_and_token = staticmethod(from_consumer_and_token)
 
     def from_token_and_callback(token, callback=None,
                                 http_method=HTTP_METHOD, http_url=None,
@@ -571,20 +585,21 @@ class OAuthSignatureMethod_HMAC_SHA1(OAuthSignatureMethod):
         if token and token.secret:
             key += escape(token.secret)
         raw = '&'.join(sig)
+
         return key, raw
 
     def build_signature(self, oauth_request, consumer, token):
-        """Builds the base signature string."""
-        key, raw = self.build_signature_base_string(oauth_request, consumer,
-                                                    token)
+        """
+        Builds the base signature string.
+        """
+        key, raw = self.build_signature_base_string(oauth_request, consumer, token)
 
         # Compute the oauth hmac Python 3.0 style
         # http://stackoverflow.com/questions/1306550/calculating-a-sha-hash-with-a-string-secret-key-in-python
         import hashlib
         import base64
         import hmac
-        hashed = hmac.new(bytearray(key, 'latin1'),
-                          bytearray(raw, 'latin1'), hashlib.sha1)
+        hashed = hmac.new(bytearray(key, 'latin1'), bytearray(raw, 'latin1'), hashlib.sha1)
 
         # Calculate the digest base 64.
         digest = hashed.digest()
