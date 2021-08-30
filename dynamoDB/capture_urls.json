@@ -1,5 +1,14 @@
 [
  {
+  "data_path": "['dados']",
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "exclude_keys": null,
+  "dependence": null,
+  "url": "https://dadosabertos.camara.leg.br/api/v2/partidos/%(id)s/membros?itens=100",
+  "headers": "{}",
+  "name": "camara-partidos-membros",
+  "data_type": "json",
   "parameters": [
    {
     "query_config": {},
@@ -10,17 +19,29 @@
     "query": "SELECT DISTINCT id FROM camara_v2.partidos"
    }
   ],
-  "data_path": "['dados']",
-  "capture_type": "daily",
   "records_keys": null,
+  "key": "legislativo/camara/v2/partidos-membros/"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {},
+    "url_params": [
+     "titulo",
+     "nome"
+    ],
+    "type": "bigquery",
+    "query": "SELECT 'senador' AS titulo, IdentificacaoParlamentar.NomeParlamentar AS nome FROM `gabinete-compartilhado.senado_processed.senadores_expandida` WHERE legislatura IN (55, 56) AND n_exercicios IS NOT NULL AND n_exercicios > 0 ORDER BY nome"
+   }
+  ],
+  "data_path": [],
+  "capture_type": "off",
   "bucket": "brutos-publicos",
-  "exclude_keys": null,
-  "dependence": null,
-  "key": "legislativo/camara/v2/partidos-membros/",
-  "url": "https://dadosabertos.camara.leg.br/api/v2/partidos/%(id)s/membros?itens=100",
-  "headers": "{}",
-  "name": "camara-partidos-membros",
-  "data_type": "json"
+  "key": "legislativo/senado/scrapping/",
+  "url": "%(nome)s",
+  "headers": {},
+  "name": "senado-senadores-wikipedia",
+  "data_type": "external_module"
  },
  {
   "parameters": [
@@ -198,6 +219,36 @@
   "parameters": [
    {
     "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaomateria.codigomateria AS id FROM senado.proposicoes_atualizadas WHERE DATE_DIFF('day', DATE_PARSE(SUBSTR(api_url, -10), '%(date_format)s'), current_date) = 1"
+   }
+  ],
+  "data_path": [
+   "DetalheMateria",
+   "Materia"
+  ],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "exclude_keys": [
+   "AtualizacoesRecentes"
+  ],
+  "key": "legislativo/senado/v1/proposicoes/",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/%(id)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-proposicoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
      "date_format": "%Y-%m-%d %H:%i:%s"
     },
     "url_params": [
@@ -256,20 +307,20 @@
   "parameters": [
    {
     "query_config": {
-     "date_format": "%Y-%m-%d %H:%i:%s"
+     "date_format": "%Y%m%d"
     },
     "url_params": [
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('minute', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format)s'), '%(date_format)s')) < 60"
+    "query": "SELECT identificacaomateria.codigomateria AS id FROM senado.proposicoes_tramitadas_periodo WHERE DATE_DIFF('day', DATE_PARSE(SUBSTR(api_url, -8), '%(date_format)s'), current_date) = 1"
    }
   ],
   "data_path": [
    "DetalheMateria",
    "Materia"
   ],
-  "capture_type": "live",
+  "capture_type": "off_live",
   "bucket": "brutos-publicos",
   "exclude_keys": [
    "AtualizacoesRecentes"
@@ -1012,6 +1063,30 @@
  {
   "parameters": [
    {
+    "query_config": {
+     "date_format": "%Y-%m-%d"
+    },
+    "url_params": [
+     "nome_lista",
+     "data_ini",
+     "lista_id"
+    ],
+    "type": "bigquery",
+    "query": "SELECT nome_lista, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_ini, lista_id, FORMAT_DATE('%(date_format)s', DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)) AS data_fim FROM `gabinete-compartilhado.redes_sociais.listas_do_twitter`"
+   }
+  ],
+  "data_path": [],
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "redes-sociais/twitter/",
+  "url": "%(lista_id)s",
+  "headers": {},
+  "name": "twitter-lists",
+  "data_type": "external_module"
+ },
+ {
+  "parameters": [
+   {
     "type": "empty"
    }
   ],
@@ -1428,13 +1503,13 @@
   "parameters": [
    {
     "query_config": {
-     "date_format": "%Y-%m-%d %H:%i:%s"
+     "date_format": "%Y-%m-%d"
     },
     "url_params": [
      "id"
     ],
     "type": "athena_query",
-    "query": "SELECT identificacaomateria.codigomateria as id FROM senado.proposicoes_tramitadas_periodo WHERE date_diff('minute', date_parse(dataultimaatualizacao, '%(date_format)s'), date_parse(date_format(current_timestamp AT TIME ZONE 'UTC-3', '%(date_format)s'), '%(date_format)s')) < 60"
+    "query": "SELECT identificacaomateria.codigomateria AS id FROM senado.proposicoes_atualizadas WHERE DATE_DIFF('day', DATE_PARSE(SUBSTR(api_url, -10), '%(date_format)s'), current_date) = 1"
    }
   ],
   "data_path": [
@@ -1443,7 +1518,36 @@
    "Tramitacoes",
    "Tramitacao"
   ],
-  "capture_type": "live",
+  "capture_type": "daily",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/v1/tramitacoes/",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/movimentacoes/%(id)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-tramitacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "query_config": {
+     "date_format": "%Y%m%d"
+    },
+    "url_params": [
+     "id"
+    ],
+    "type": "athena_query",
+    "query": "SELECT identificacaomateria.codigomateria AS id FROM senado.proposicoes_tramitadas_periodo WHERE DATE_DIFF('day', DATE_PARSE(SUBSTR(api_url, -8), '%(date_format)s'), current_date) = 1"
+   }
+  ],
+  "data_path": [
+   "MovimentacaoMateria",
+   "Materia",
+   "Tramitacoes",
+   "Tramitacao"
+  ],
+  "capture_type": "off_live",
   "bucket": "brutos-publicos",
   "key": "legislativo/senado/v1/tramitacoes/",
   "url": "http://legis.senado.leg.br/dadosabertos/materia/movimentacoes/%(id)s",
@@ -1519,7 +1623,7 @@
  {
   "parameters": [
    {
-    "end_date": "now",
+    "end_date": "yesterday",
     "date_format": "%Y%m%d",
     "timedelta": -1,
     "type": "date_start_end"
@@ -1530,7 +1634,7 @@
    "Materias",
    "Materia"
   ],
-  "capture_type": "live",
+  "capture_type": "off_live",
   "bucket": "brutos-publicos",
   "key": "legislativo/senado/v1/proposicoes-tramitadas-periodo/",
   "url": "http://legis.senado.leg.br/dadosabertos/materia/legislaturaatual?data=%(end_date)s",
@@ -1856,8 +1960,8 @@
    {
     "name": "year",
     "body": {
-     "from": 1988,
-     "to": 2020
+     "from": 2019,
+     "to": 2021
     },
     "type": "from_to"
    }
@@ -1873,7 +1977,7 @@
    "AtualizacoesRecentes"
   ],
   "key": "legislativo/senado/v1/proposicoes-lista/",
-  "url": "http://legis.senado.leg.br/dadosabertos/materia/pesquisa/lista?ano=%(year)s",
+  "url": "http://legis.senado.leg.br/dadosabertos/materia/pesquisa/lista?ano=%(year)s&dataInicioApresentacao=%(year)s0101",
   "headers": {
    "Accept": "application/json"
   },
@@ -1973,6 +2077,30 @@
    "Accept": "application/json"
   },
   "name": "senado-senador-votacoes",
+  "data_type": "json"
+ },
+ {
+  "parameters": [
+   {
+    "end_date": "now",
+    "date_format": "%Y-%m-%d",
+    "timedelta": -1,
+    "type": "date_start_end"
+   }
+  ],
+  "data_path": [
+   "ListaMateriasAtualizadas",
+   "Materias",
+   "Materia"
+  ],
+  "capture_type": "live",
+  "bucket": "brutos-publicos",
+  "key": "legislativo/senado/v1/proposicoes-atualizadas/",
+  "url": "https://legis.senado.leg.br/dadosabertos/materia/atualizadas?numdias=1&data=%(end_date)s",
+  "headers": {
+   "Accept": "application/json"
+  },
+  "name": "senado-proposicoes-atualizadas",
   "data_type": "json"
  },
  {
