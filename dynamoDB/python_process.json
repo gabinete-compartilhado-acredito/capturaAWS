@@ -123,7 +123,7 @@
   },
   "code": {
    "bucket": "config-lambda",
-   "key": "models/dou-2_sorter_ensemble_2020-07-25/production_model.joblib"
+   "key": "models/dou-2_sorter_ensemble_2021-09-17/production_model.joblib"
   },
   "input_data": {
    "bucket": "brutos-publicos",
