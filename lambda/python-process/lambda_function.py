@@ -360,6 +360,7 @@ def copy_s3_to_storage_gcp(bucket, key):
 def lambda_handler(event, context):
     print(event)
     
+    
     # Seleciona um arquivo do dynamo:
     if debug:
         print('Load processing config...')

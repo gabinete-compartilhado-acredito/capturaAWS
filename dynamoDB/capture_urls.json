@@ -937,18 +937,18 @@
   "data_type": "json"
  },
  {
+  "data_path": [
+   "dados"
+  ],
   "parameters": [
    {
     "name": "id",
     "body": {
-     "from": 2021,
-     "to": 2021
+     "from": 2022,
+     "to": 2022
     },
     "type": "from_to"
    }
-  ],
-  "data_path": [
-   "dados"
   ],
   "capture_type": "daily",
   "bucket": "brutos-publicos",
@@ -1132,19 +1132,19 @@
   "data_type": "external_module"
  },
  {
+  "data_path": [
+   "proposicoes",
+   "proposicao"
+  ],
   "parameters": [
    {
     "type": "empty"
    }
   ],
-  "data_path": [
-   "proposicoes",
-   "proposicao"
-  ],
   "capture_type": "daily",
   "bucket": "brutos-publicos",
   "key": "legislativo/camara/v1/proposicoes-votadas-plenario/",
-  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2021&tipo=",
+  "url": "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ListarProposicoesVotadasEmPlenario?ano=2022&tipo=",
   "headers": {},
   "name": "camara-proposicoes-votadas-plenario",
   "data_type": "xml"
@@ -1238,18 +1238,18 @@
   "data_type": "xml"
  },
  {
+  "data_path": [
+   "dados"
+  ],
   "parameters": [
    {
     "name": "year",
     "body": {
-     "from": 2021,
-     "to": 2021
+     "from": 2022,
+     "to": 2022
     },
     "type": "from_to"
    }
-  ],
-  "data_path": [
-   "dados"
   ],
   "capture_type": "daily",
   "bucket": "brutos-publicos",
@@ -1350,18 +1350,18 @@
   "data_type": "json"
  },
  {
+  "data_path": [
+   "dados"
+  ],
   "parameters": [
    {
     "name": "id",
     "body": {
-     "from": 2021,
-     "to": 2021
+     "from": 2022,
+     "to": 2022
     },
     "type": "from_to"
    }
-  ],
-  "data_path": [
-   "dados"
   ],
   "capture_type": "daily",
   "bucket": "brutos-publicos",
@@ -1456,18 +1456,18 @@
   "data_type": "json"
  },
  {
+  "data_path": [
+   "dados"
+  ],
   "parameters": [
    {
     "name": "id",
     "body": {
-     "from": 2021,
-     "to": 2021
+     "from": 2022,
+     "to": 2022
     },
     "type": "from_to"
    }
-  ],
-  "data_path": [
-   "dados"
   ],
   "capture_type": "daily",
   "bucket": "brutos-publicos",
@@ -1793,20 +1793,20 @@
   "data_type": "json"
  },
  {
-  "parameters": [
-   {
-    "name": "year",
-    "body": {
-     "from": 2021,
-     "to": 2021
-    },
-    "type": "from_to"
-   }
-  ],
   "data_path": [
    "ListaVotacoes",
    "Votacoes",
    "Votacao"
+  ],
+  "parameters": [
+   {
+    "name": "year",
+    "body": {
+     "from": 2022,
+     "to": 2022
+    },
+    "type": "from_to"
+   }
   ],
   "capture_type": "daily",
   "records_keys": [
@@ -1956,20 +1956,20 @@
   "data_type": "json"
  },
  {
+  "data_path": [
+   "PesquisaBasicaMateria",
+   "Materias",
+   "Materia"
+  ],
   "parameters": [
    {
     "name": "year",
     "body": {
      "from": 2019,
-     "to": 2021
+     "to": 2022
     },
     "type": "from_to"
    }
-  ],
-  "data_path": [
-   "PesquisaBasicaMateria",
-   "Materias",
-   "Materia"
   ],
   "capture_type": "historical",
   "bucket": "brutos-publicos",
