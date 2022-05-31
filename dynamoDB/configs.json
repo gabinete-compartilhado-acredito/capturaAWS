@@ -2,7 +2,7 @@
  {
   "url_list": "douDB_captured_urls",
   "date_format": "%Y-%m-%d",
-  "end_date": "2022-02-21",
+  "end_date": "2022-05-31",
   "secao": [
    1,
    2,
@@ -10,8 +10,8 @@
    "e"
   ],
   "daily_clean_url_list": true,
-  "save_articles": true,
   "name": "build_DOU_database",
+  "save_articles": true,
   "slack_token": "not required",
   "timedelta": 0,
   "storage_path": "not required",
@@ -23,7 +23,7 @@
   "article_batch_size": 500,
   "url_list": "dou_captured_urls",
   "date_format": "%Y-%m-%d",
-  "end_date": "2022-02-21",
+  "end_date": "2022-05-31",
   "secao": [
    1,
    2,
@@ -31,8 +31,8 @@
   ],
   "daily_clean_url_list": true,
   "name": "capture_DOU",
+  "next_batch": true,
   "save_articles": false,
-  "next_batch": false,
   "slack_token": "not required",
   "timedelta": 0,
   "storage_path": "not required",

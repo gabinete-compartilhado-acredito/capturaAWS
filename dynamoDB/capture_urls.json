@@ -86,15 +86,18 @@
   "data_type": "xml"
  },
  {
+  "data_path": [],
+  "parallel_batches": 5,
   "parameters": [
    {
     "params": {
-     "end_date": "2020-10-20",
+     "end_date": "2019-06-30",
      "debug": false,
-     "timedelta": -8,
+     "timedelta": -27,
      "date_format": "%Y-%m-%d",
      "save_articles": true,
      "secao": [
+      2,
       "e"
      ],
      "use_config": false,
@@ -103,8 +106,6 @@
     "type": "external_module"
    }
   ],
-  "data_path": [],
-  "parallel_batches": 5,
   "capture_type": "historical",
   "bucket": "brutos-publicos",
   "key": "executivo/federal/dou-partitioned/",
