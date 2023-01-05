@@ -6,6 +6,7 @@ import json
 import datetime as dt
 import global_settings as gs
 import os
+import random
 
 if not gs.local:
     import boto3                                  
@@ -45,12 +46,20 @@ def get_artigos_do(data, secao):
     # Specifies number of retries for GET:
     session = requests.Session()
     session.mount('http://www.in.gov.br', requests.adapters.HTTPAdapter(max_retries=3))
+
+    # Creating fake user agents:
+
+    user_agents_list = [
+        'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.83 Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36'
+    ]
     
     # Captura a lista de artigos daquele dia e seção:
     try:
-        res = session.get(url, timeout=10)
+        res = session.get(url, headers={'User-Agent': random.choice(user_agents_list)}, timeout=10)
     except requests.exceptions.SSLError:
-        res = session.get(url, timeout=10, verify=False)
+        res = session.get(url, headers={'User-Agent': random.choice(user_agents_list)}, timeout=10, verify=False)
     if res.status_code != 200:
         raise Exception('http GET request failed with code '+str(res.status_code)+'!')
     tree  = html.fromstring(res.content)
