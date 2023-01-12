@@ -13,3 +13,4 @@ lambda/http-request/external_modules/.ipynb_checkpoints/
 dynamoDB/dou_captured_urls.json
 dynamoDB/douDB_captured_urls.json
 dynamoDB/caraacara_log.json
+lambda/testing/local_out

@@ -14,9 +14,22 @@ class InLabsDriver:
                         }
         self.session = requests.Session()
 
+    def get_cookies(self):
+        try:
+            cookie = self.session.cookies.get('inlabs_session_cookie')
+        except:
+            raise Exception("Failed to obtain cookies. Verify credentials")
+        
+        self.cookie = cookie
+
     def login(self):
         try:
             response = self.session.request("POST", self.url_login, data=self.payload, headers=self.headers, timeout=10)
         except requests.exceptions.SSLError:
             response = self.session.request("POST", self.url_login, data=self.payload, headers=self.headers, timeout=10, verify=False)
+        
+        # Obtaining cookies
+        self.get_cookies()
+
+
 
