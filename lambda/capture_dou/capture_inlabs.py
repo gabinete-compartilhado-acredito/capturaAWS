@@ -2,7 +2,7 @@ import datetime as dt
 from inlabs_driver import InLabsDriver
 
 #tipo_dou="DO1 DO2 DO3 DO1E DO2E DO3E" # Seções separadas por espaço
-tipo_dou = "DO1"
+tipo_dou = "DO2"
 
 def brasilia_day():
     """
