@@ -1,3 +1,5 @@
+import re
+
 def get_key_value(key, article_raw):
     """
     Searches for an entry in article_raw (which is a list of dicts) that
@@ -45,6 +47,17 @@ def make_resumo(fulltext):
     
     return abstract
     
+def structure_paragraph(paragraph):
+    """
+    Given a html text paragraph, this function aims to extract the clean text
+    ignoring the html tags.
+    """
+
+    # Remove tags
+    pattern = r'<p>(.*?)<\/p>'
+    paragraph = ' '.join(re.findall(pattern, paragraph))
+
+    return paragraph
 
 def structure_article(article_raw):
     """
@@ -53,9 +66,10 @@ def structure_article(article_raw):
     keys (hard-coded), rename them and output a dict with only the relevant 
     keys.
     """
-    relevant_keys = ['secao-dou', 'orgao-dou-data', 'assina', 'identifica', 'cargo', 'secao-dou-data', 
+
+    relevant_keys = ['secao-dou', 'orgao-dou-data', 'assina', 'article-body-Identifica', 'cargo', 'secao-dou-data', 
                      'edicao-dou-data', 'dou-em', 'ementa', 'dou-strong', 'titulo', 'subtitulo', 
-                     'dou-paragraph', 'publicado-dou-data', 'assinaPr', 'fulltext']
+                     'article-body-Texto', 'publicado-dou-data', 'assinaPr', 'fulltext']
     new_keys      = ['secao', 'orgao', 'assina', 'identifica', 'cargo', 'pagina',
                      'edicao', 'italico', 'ementa', 'strong', 'ato_orgao', 'subtitulo', 
                      'paragraph', 'pub_date', 'assinaPr', 'fulltext']
@@ -69,13 +83,16 @@ def structure_article(article_raw):
     struct['url_certificado'] = article_raw[0]['url_certificado']
     
     # Format selected fields:
-    struct['secao']  = struct['secao'].split('|')[0].split(':')[1].strip()
+    struct['secao']  = re.search(r'\d+(?:\w)?', struct['secao']).group()
     if struct['assinaPr'] != None:   # Existe assinatura do presidente.
         if struct['assina'] != None: # Existe as duas assinaturas.
             struct['assina'] = struct['assinaPr'] + ' | ' + struct['assina']
         else:                        # Só existe a assinatura do presidente.
             struct['assina'] = struct['assinaPr']
-    
+
+    # Structure paragraph:
+    struct['paragraph'] = structure_paragraph(struct['paragraph'])
+
     # Create new field (all the text):
     fields_list = filter(lambda s: s!=None, [struct['ato_orgao'], struct['subtitulo'], struct['ementa'], 
                                             struct['strong'], struct['italico'], struct['paragraph']])

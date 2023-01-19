@@ -4,20 +4,6 @@ from collections import defaultdict
 import re
 
 
-def select_article(response):
-    """
-    Transforms html into lxml data type and selects only 
-    article div
-    
-    input: 
-        response: requests.models.Response
-    return: lxml.html.HtmlElement
-    """
-    tree  = html.fromstring(response.content)
-    xpath = '//*[@id="materia"]'
-    return tree.xpath(xpath)[0]
-
-
 def branch_text(branch):
     """
     Takes and lxml tree element 'branch' and returns its text, 
@@ -48,19 +34,22 @@ def add_to_data(branch, data, key):
 
 def recurse_over_nodes(tree, parent_key, data):
     """
-    Recursevely gets the text of the html leafs and saves
+    Recursevely gets the text of the xml leafs and saves
     its classes and keys and text as values
     
     input: 
-        tree: lxml.html.HtmlElement
-        parent_key: lxml.html.HtmlElement
+        tree: lxml.etree._Element
+        parent_key: lxml.etree._Element
         data: dict
     return: dict
     """            
     for branch in tree:
-        key = '-'.join(list(branch.classes))
+        try:
+            key = branch.attrib.get('class')
+        except:
+            key = branch.attrib.get('id')
         
-        if branch.getchildren():
+        if list(branch):
             if parent_key:
                 key = '%s_%s' % (parent_key, key)    
             add_to_data(branch, data, key) 
@@ -73,28 +62,42 @@ def recurse_over_nodes(tree, parent_key, data):
     
     return data
 
+def parse_xml_flattened(element, parent_key=""):
+    result = {}
+    for child in element:
+        key = parent_key + child.tag
+        if len(child) > 0:
+            result.update(parse_xml_flattened(child, key + "-"))
+        else:
+            result[key] = child.text
+    return result
 
-def decode(data, encoding= 'iso-8859-1', decoding='utf8'):
+
+def extract_necessary_fields(article):
+    """ 
+    Extract necessary fields that were present in html parser but
+    are not present as keys in inlabs xml response
     """
-    Change enconding from string with secure error handling
-    
-    input:
-        data: dict
-        encoding: string
-        decoding: string
-    return: dict
-    """    
-    final = {}
-    
-    for k, v in data.items():        
-        try:
-            final[k] = v.encode('iso-8859-1').decode('utf8')
-        except Exception as e:
-            print("Error", e)
-            final[k] = v
-    
-    return final
+    orgao_dou_data = article.xpath('//article/@artCategory')[0]
+    edicao_dou_data =  article.xpath('//article/@editionNumber')[0]
+    secao_dou_data = article.xpath('//article/@numberPage')[0]
+    secao_dou = article.xpath('//article/@pubName')[0]
+    publicado_dou_data = article.xpath('//article/@pubDate')[0]
 
+    # Compile a regular expression pattern to search for the "assina" class
+    pattern = re.compile(r'<p class="assina">(.*?)</p>')
+    # Search for the pattern in the assina variable
+    match = pattern.search(article.xpath('.//article/body/Texto/text()')[0])
+    # Extract the text within the <p> tags
+    if match:
+        assina_text = match.group(1)
+        assina = assina_text
+    else:
+        assina = ''
+        
+    return {'orgao-dou-data': orgao_dou_data, 'edicao-dou-data': edicao_dou_data, 
+            'secao-dou-data': secao_dou_data, 'assina': assina, 'secao-dou': secao_dou,
+            'publicado-dou-data': publicado_dou_data}
 
 def filter_keys(data):
     """
@@ -129,53 +132,7 @@ def filter_values(data):
         if re.search('[a-zA-Z0-9]', v):        
             final[k] = v
             
-    return final
-
-
-def get_data(article):
-    """
-    Get relevant data from html. It recursevely gets leaf text from html
-    and saves theirs classes as keys. 
-    It also creates an item in dict's key 'full-text' with all text 
-    in the html, without tags.
-    
-    input: 
-        article: lxml.html.HtmlElement
-    return: dict
-    """
-    data = recurse_over_nodes(article, None, {})
-
-    # filtra None e melhora keys
-    data = filter_keys(data)
-    data = filter_values(data)
-    data = {k: v for k,v in data.items() if len(k) != 0}
-
-    # encoding para utf-8
-    data = decode(data)
-    
-    # Include full-text:
-    try:
-        full_text = html.tostring(article, method='text', encoding='iso-8859-1').decode('utf-8')
-        full_text = ' '.join(full_text.split())
-    except UnicodeEncodeError:
-        full_text = html.tostring(article, method='text', encoding='utf-8').decode('utf-8')
-        full_text = ' '.join(full_text.split())
-    except UnicodeDecodeError:
-        full_text = None
-    data['fulltext'] = full_text
-    
-    return data
-
-
-def get_url_certificado(article):
-    """
-    Gets in certified url in the html
-    
-    input: 
-        artigo: lxml.html.HtmlElement
-    return: string
-    """
-    return article.xpath('//*[@class="botao-materia"]/a[@href]/@href')[0]
+    return final    
 
 
 def data_schema(key, value, url, url_certificado):
@@ -197,6 +154,53 @@ def data_schema(key, value, url, url_certificado):
         "url_certificado": url_certificado
     }
 
+def get_url_certificado(article):
+    """
+    Gets the certified url in the xml
+    
+    input: 
+        article: lxml.etree._Element
+    return: string
+    """
+    return article.xpath('//article/@pdfPage')[0]
+
+def get_data(article):
+    """
+    Get relevant data from xml. It recursevely gets leaf text from xml
+    and saves theirs classes as keys. 
+    It also creates an item in dict's key 'full-text' with all text 
+    in the xml, without tags.
+    
+    input: 
+        article: lxml.etree._Element
+    return: dict
+    """
+    data = parse_xml_flattened(article)
+
+    # filtra None e melhora keys
+    data = filter_keys(data)
+    data = filter_values(data)
+    data = {k: v for k,v in data.items() if len(k) != 0}
+
+    # Include other fields from extraction
+    fields = extract_necessary_fields(article)
+    data['orgao-dou-data'] = fields['orgao-dou-data']
+    data['edicao-dou-data'] = fields['edicao-dou-data']
+    data['secao-dou-data'] = fields['secao-dou-data']
+    data['assina'] = fields['assina']
+    data['secao-dou'] = fields['secao-dou']
+    data['publicado-dou-data'] = fields['publicado-dou-data']
+
+    # Include full-text ignoring xml tags and formatters:
+    full_text = etree.tostring(article, pretty_print=True, encoding='unicode')
+    full_text = ' '.join(full_text.split())
+    full_text = re.search(r'<Texto>(.*?)</Texto>', full_text).group(1)
+    full_text = full_text.replace('&lt;','<').replace('&gt;','>')
+    clean_full_text = re.sub(r'<[^>]+>', '', full_text)
+
+    data['fulltext'] = clean_full_text
+
+    return data
 
 def structure_data(data, url, article):
     """
@@ -221,7 +225,7 @@ def structure_data(data, url, article):
     return final
         
 
-def parse_dou_article(response, url):
+def parse_dou_article(response, url=''):
     """
     Gets an HTTP request response for a DOU article's URL and that url 
     and parse the relevant fields to a list of dicts. Each dict has the 
@@ -232,8 +236,7 @@ def parse_dou_article(response, url):
     * capture_date    -- The date when capture occured;
     * url_certificado -- The link to the certified version of the article.
     """
-    article = select_article(response)    
-    data    = get_data(article)    
-    data    = structure_data(data, url, article)
+    data    = get_data(response)    
+    data    = structure_data(data, url, response)
     
     return data
