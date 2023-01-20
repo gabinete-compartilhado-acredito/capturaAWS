@@ -1,5 +1,5 @@
 import time
-import capture_driver as cd
+import capture_inlabs as cd
 import global_settings as gs
 # Packages only required for remote implementation:
 if not gs.local:
