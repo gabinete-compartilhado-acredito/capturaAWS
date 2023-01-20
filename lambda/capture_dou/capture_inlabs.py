@@ -115,6 +115,7 @@ def capture_DOU_driver(event):
                 raw_article = pa.parse_dou_article(xml_root)
                 article = sa.structure_article(raw_article)
 
+                wrote_return = 2
                 if config['save_articles']:
                     if gs.debug:
                         print("Saving article...")

@@ -16,6 +16,9 @@ def load_zipped_response(response):
     with zipfile.ZipFile(zip_file, 'r') as zip_ref:
         for xml_file in zip_ref.namelist():
             with zip_ref.open(xml_file) as f:
+                # Check file extension
+                if not xml_file.endswith('.xml'):
+                    continue
                 # Read the xml file from memory
                 xml_data = f.read()
             # Parse the XML data
