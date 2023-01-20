@@ -1,7 +1,26 @@
-from lxml import html
+from lxml import etree
 from datetime import datetime
 from collections import defaultdict
+import io
+import zipfile
 import re
+
+def load_zipped_response(response):
+    """
+    Download a ZIP file and extract its contents in memory
+    yields (filename, file-like object) pairs
+    """
+
+    # Extract the contents of the .zip file in memory
+    zip_file = io.BytesIO(response.content)
+    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+        for xml_file in zip_ref.namelist():
+            with zip_ref.open(xml_file) as f:
+                # Read the xml file from memory
+                xml_data = f.read()
+            # Parse the XML data
+            root = etree.fromstring(xml_data)
+            yield root, xml_file
 
 
 def branch_text(branch):

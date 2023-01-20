@@ -246,7 +246,7 @@ def update_config(config, Nurls):
     return config2
 
 
-def get_articles_url(config):
+def get_articles_urls(config):
     """
     Get as input a dict 'config' with keys:
     
@@ -259,9 +259,6 @@ def get_articles_url(config):
 
     and creates a list of DOU articles' URLs to download. 
     """
-    
-    # Hard-coded stuff:
-    url_prefix = 'http://www.in.gov.br/web/dou/-/'
     
     # Debug message:
     if True or gs.debug == True:
@@ -294,8 +291,9 @@ def get_articles_url(config):
     secoes = config['secao']
     secoes = [1, 2, 3, 'e', '1a'] if secoes == 'all' else secoes
     secoes = secoes if type(secoes) == list else [secoes]
-    secoes = [str(s) for s in secoes]
-    
+    secao_mapping = {1: 'DO1', 2: 'DO2', 3: 'DO3', 'e': 'DO2E', '1a': 'DO1E'}
+    secoes = config['secao'].map(secao_mapping)
+
     # LOOP over dates:
     url_file_list = []
     start_date = end_date + timedelta
