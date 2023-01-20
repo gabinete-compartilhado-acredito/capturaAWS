@@ -87,10 +87,8 @@ def configure_iteration(config):
     if gs.debug == True:
         print('Reading selected sections...')    
     secoes = config['secao']
-    secoes = [1, 2, 3, 'e', '1a'] if secoes == 'all' else secoes
+    secoes = ['DO1', 'DO2', 'DO3', 'DO2E', 'DO1E'] if secoes == 'all' else secoes
     secoes = secoes if type(secoes) == list else [secoes]
-    secao_mapping = {1: 'DO1', 2: 'DO2', 3: 'DO3', 'e': 'DO2E', '1a': 'DO1E'}
-    secoes = [secao_mapping[s] for s in secoes]
     config['secao'] = secoes
 
             
