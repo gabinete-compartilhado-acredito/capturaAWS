@@ -90,7 +90,8 @@ def configure_iteration(config):
     secoes = [1, 2, 3, 'e', '1a'] if secoes == 'all' else secoes
     secoes = secoes if type(secoes) == list else [secoes]
     secao_mapping = {1: 'DO1', 2: 'DO2', 3: 'DO3', 'e': 'DO2E', '1a': 'DO1E'}
-    secoes = config['secao'].map(secao_mapping)
+    secoes = [secao_mapping[s] for s in secoes]
+    config['secao'] = secoes
 
             
     return skip, update_config(config)

@@ -27,8 +27,7 @@ class InLabsDriver:
                       Bucket='config-lambda', 
                       Key='inlabs_credentials.json')
         
-        file_content = obj.get()['Body'].read().decode('utf-8')
-        secret = json.loads(file_content)
+        secret = json.loads(obj['Body'].read().decode('utf-8'))
         email = secret['email']
         password = secret['pass']
 
