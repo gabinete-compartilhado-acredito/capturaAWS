@@ -48,7 +48,6 @@ def capture_DOU_driver(event):
     It receives either a filename (string) for a configuration file 
     or a configuration as a dict with keywords:
 
-    * storage_path:  the path to save DOU articles;
     * save_articles: BOOL that tells whether or not to write all articles to database; 
     * date_format:   the format of end_date (e.g. %Y-%m-%d);
     * end_date:      the last day to search for articles (cat be set to 'now');
@@ -109,7 +108,6 @@ def capture_DOU_driver(event):
         file_header = {'Cookie': 'inlabs_session_cookie=' + driver.cookie, 'origem': '736372697074'}
         file_response = driver.session.request("GET", file_url, headers = file_header)
         if file_response.status_code == 200:
-            # TO DO: INSERT HERE THE CODE ON XML_PROCESSING.IPYNB
             for xml_root, filename in pa.load_zipped_response(file_response):
                 
                 raw_article = pa.parse_dou_article(xml_root)
@@ -123,9 +121,12 @@ def capture_DOU_driver(event):
                         wa.write_local_article(config, raw_article, '')
                         wrote_return = 200
                     else:
-                        write_return = wa.write_to_s3(config, raw_article, filename)
+                        stuctured_filename = wa.build_filename(config['end_date'], filename, dou_secao, hive_partitioning=True)
+                        if gs.debug:
+                            print('Writing to S3: ' + stuctured_filename)
+                        write_return = wa.write_to_s3(config, raw_article, stuctured_filename, dou_secao)
                         if write_return == 200:
-                            wrote_return = wa.copy_s3_to_storage_gcp(config['bucket'], config['key'] + filename)
+                            wrote_return = wa.copy_s3_to_storage_gcp(config['bucket'], config['key'] + stuctured_filename)
                             if wrote_return != 200 and gs.debug:
                                 raise Exception('Copy_s3_to_storage_gcp failed.') 
                         elif gs.debug:
@@ -153,7 +154,7 @@ def capture_DOU_driver(event):
                   
         else:
             # GET ran but returned BAD STATUS:
-            raise Exception('Bad status in GET ')  
+            raise Exception('Bad status in GET', file_response.status_code)
 
     if config['post_articles']:
         # Send the selected articles to Slack:

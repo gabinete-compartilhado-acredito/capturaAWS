@@ -65,6 +65,48 @@ def write_local_article(config, article_raw, filename):
     with open(path + filename, 'w') as f:
         json.dump(article_raw, f)
 
+def fix_filename(urlTitle):
+    """
+    Change the url 'urlTitle' substring used to acess the DOU article to something 
+    that can be used as part of a filename.    
+    """
+    fixed = urlTitle.replace('//', '/')
+    fixed = fixed.replace('*', 'xXx')
+    fixed = fixed.replace('.xml', '')
+    return fixed
+
+def build_filename(date, secao, urlTitle, hive_partitioning=True):
+    """ 
+    Create a filename for the data to be saved on AWS and GCP
+    (without the folders).
+    
+    Input
+    -----
+
+    date : datetime
+        The date of publication.
+
+    secao : int or str
+        The seção (or extra edition) where the publication was made. 
+        It can take the values 1, 2, 3, 'e' or '1a'.
+
+    urlTitle : str
+        The name of the file on in.gov.br website, without the folders and extension.
+
+    hive_partitioning : bool (default True)
+        Whether or not to use BigQuery's hive partitioning structure in the filename
+        (e.g. part_data_pub=2020-07-29/part_secao=2/...)
+    """
+    secao = str(secao).replace('DO','')
+    if 'E' in secao.upper():
+        secao = 'e'
+
+    if hive_partitioning:
+        prefix = 'part_data_pub=' + date + '/part_secao=' + secao + '/'
+    else:
+        prefix = ''
+    
+    return prefix + date + '_s' + secao + '_' + fix_filename(urlTitle) + '.json'
 
 def write_to_s3(config, article_raw, filename):
     """

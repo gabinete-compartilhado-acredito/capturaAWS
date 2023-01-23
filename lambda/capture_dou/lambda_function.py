@@ -17,7 +17,7 @@ def lambda_handler(event, context):
     client = boto3.client('dynamodb')
     
     # Load config from AWS DynamoDB:
-    config = client.get_item(TableName="configs",  Key={'name': {'S': 'capture_DOU'}})
+    config = client.get_item(TableName="configs",  Key={'name': {'S': 'scrape_and_persist_DOU'}})
     config = dyjson.loads(config)['Item']
     
     # Run DOU articles capture:
