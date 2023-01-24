@@ -149,6 +149,18 @@ def keyvalue_to_structure(raw_data, key_list):
         
     return structured_data
 
+def rename_dict_keys(dict_list, old_keys, new_keys):
+    """
+    Given a list of dicts `dict_list`, rename the keys to the same
+    pattern used in the DOU website.
+    """
+    copy = dict_list.copy()
+
+    for d in copy:
+        for old_key, new_key in zip(old_keys, new_keys):
+            if d.get('key') == old_key:
+                d['key'] = new_key
+    return copy
 
 def s3_file_to_dict_list(bucket, path, key_list=None, honorary_keys=None):
     """
@@ -189,24 +201,23 @@ def s3_file_to_dict_list(bucket, path, key_list=None, honorary_keys=None):
     content  = get_file_s3(bucket, path)
     # Transform the content into a list of dicts:
     raw_data = load_njson(content)
-    
+    data = rename_dict_keys(raw_data, old_keys = ['article-body-Identifica'], new_keys = ['identifica'])
+
     # If it is not a key-value pair, return list of dicts:
     if key_list == None:
-        structured_data = raw_data
+        structured_data = data
     
     # Else, parse into a dict with selected keys:
     else:
-        data_dict = keyvalue_to_structure(raw_data, key_list)
-        
+        data_dict = keyvalue_to_structure(data, key_list)
         # If there are other entries in raw_data other than 'key' and 'value', extract them here:
         if honorary_keys != None:
             for honorary in honorary_keys:
-                data_dict[honorary] = raw_data[0][honorary]
+                data_dict[honorary] = data[0][honorary]
         
         structured_data = [data_dict]
         
     return structured_data
-
 
 def load_s3_njson(bucket, prefix, key_list, honorary_list):
     """

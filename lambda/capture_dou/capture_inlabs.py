@@ -121,10 +121,10 @@ def capture_DOU_driver(event):
                         wa.write_local_article(config, raw_article, '')
                         wrote_return = 200
                     else:
-                        stuctured_filename = wa.build_filename(config['end_date'], filename, dou_secao, hive_partitioning=True)
+                        stuctured_filename = wa.build_filename(config['end_date'], dou_secao, filename, hive_partitioning=True)
                         if gs.debug:
                             print('Writing to S3: ' + stuctured_filename)
-                        write_return = wa.write_to_s3(config, raw_article, stuctured_filename, dou_secao)
+                        write_return = wa.write_to_s3(config, raw_article, stuctured_filename)
                         if write_return == 200:
                             wrote_return = wa.copy_s3_to_storage_gcp(config['bucket'], config['key'] + stuctured_filename)
                             if wrote_return != 200 and gs.debug:
