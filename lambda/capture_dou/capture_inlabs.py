@@ -151,7 +151,11 @@ def capture_DOU_driver(event):
                     gu.register_captured_url(config['url_list'], filename)
                 elif gs.debug:
                     print('Failed to record as done: ' + filename)
-                  
+        
+        elif file_response.status_code == 404:
+            # GET ran but returned 404:
+            print('No DOU for ' + date_string + ' and section ' + dou_secao)          
+            
         else:
             # GET ran but returned BAD STATUS:
             raise Exception('Bad status in GET', file_response.status_code)
