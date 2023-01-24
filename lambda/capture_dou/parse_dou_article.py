@@ -245,7 +245,19 @@ def structure_data(data, url, article):
         final.append(data_schema(key, value, url, url_certificado))
         
     return final
-        
+
+def rename_dict_keys(dict_list, old_keys, new_keys):
+    """
+    Given a list of dicts `dict_list`, rename the keys to the same
+    pattern used in the DOU website.
+    """
+    copy = dict_list.copy()
+
+    for d in copy:
+        for old_key, new_key in zip(old_keys, new_keys):
+            if d.get('key') == old_key:
+                d['key'] = new_key
+    return copy
 
 def parse_dou_article(response, url=''):
     """
@@ -260,5 +272,6 @@ def parse_dou_article(response, url=''):
     """
     data    = get_data(response)    
     data    = structure_data(data, url, response)
+    data = rename_dict_keys(data, old_keys = ['article-body-Identifica'], new_keys = ['identifica'])
     
     return data
