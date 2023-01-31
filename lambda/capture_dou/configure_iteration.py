@@ -11,7 +11,7 @@ def brasilia_day():
 def format_date(config):
     pass
 
-def update_config(config):
+def update_config(config, end_date):
     """
     Given a config file for capturing DOU articles' URLs and the number of
     articles that sgould be downloaded prior to batch size limitations `Nurls`,
@@ -30,17 +30,14 @@ def update_config(config):
     
     # Copy config:
     config2  = dict(config)
-    end_date = dt.datetime.strptime(config['end_date'], config['date_format'])
 
-    # If end_date is in the past, return next day and clean captured URLs list (if requested):
-    if end_date < brasilia_day():
-        if config['daily_clean_url_list'] == True:
-            raise Exception('current implementation does not allow daily_clean_url_list=True.')
+    if config['daily_clean_url_list'] == True:
+        raise Exception('current implementation does not allow daily_clean_url_list=True.')
 
-        config2['end_date'] = (end_date + dt.timedelta(days=1)).strftime(config['date_format'])
-        return config2
-            
+    # Update end_date:
+    config2['end_date'] = (end_date + dt.timedelta(days=1)).strftime(config['date_format'])
     return config2
+
 
 def configure_iteration(config):
     """
@@ -70,11 +67,8 @@ def configure_iteration(config):
         end_date = brasilia_day() + dt.timedelta(days=-1)
     else:
         end_date = dt.datetime.strptime(config['end_date'], config['date_format'])
-    # Save it back to config dict:
-    config['end_date'] = end_date.strftime(config['date_format'])
-    
+
     timedelta = dt.timedelta(days=config['timedelta'])
-    
     # If end_date is in the future, return empty list and same config
     # (wait for the next day):
     # PS: this will skip request URLs even for negative timedelta.
@@ -82,7 +76,7 @@ def configure_iteration(config):
         skip = True
         return skip, config
     skip = False
-        
+
     # Translate secao config to a list of strings:
     if gs.debug == True:
         print('Reading selected sections...')    
@@ -90,6 +84,5 @@ def configure_iteration(config):
     secoes = ['DO1', 'DO2', 'DO3', 'DO2E', 'DO1E'] if secoes == 'all' else secoes
     secoes = secoes if type(secoes) == list else [secoes]
     config['secao'] = secoes
-
             
-    return skip, update_config(config)
+    return skip, update_config(config, end_date)
